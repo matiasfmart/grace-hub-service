@@ -1,0 +1,67 @@
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  ParseIntPipe,
+  HttpCode,
+  HttpStatus,
+} from '@nestjs/common';
+import { MemberApplicationService } from '../../application/services/member-application.service';
+import { CreateMemberDto } from '../dtos/create-member.dto';
+import { MemberResponseDto } from '../dtos/member-response.dto';
+import { CreateMemberCommand } from '../../application/commands/create-member.command';
+
+/**
+ * Members Controller (Presentation Layer)
+ *
+ * Responsibilities:
+ * - Handle HTTP requests/responses
+ * - Validate DTOs (framework-level validation)
+ * - Map DTOs to Commands
+ * - Map Domain objects to Response DTOs
+ * - Does NOT contain business logic
+ */
+@Controller('members')
+export class MembersController {
+  constructor(
+    private readonly memberApplicationService: MemberApplicationService,
+  ) {}
+
+  @Get()
+  async findAll(): Promise<MemberResponseDto[]> {
+    const members = await this.memberApplicationService.getAllMembers();
+    return members.map(member => MemberResponseDto.fromDomain(member));
+  }
+
+  @Get(':id')
+  async findOne(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<MemberResponseDto> {
+    const member = await this.memberApplicationService.getMemberById(id);
+    return MemberResponseDto.fromDomain(member);
+  }
+
+  @Post()
+  @HttpCode(HttpStatus.CREATED)
+  async create(
+    @Body() createMemberDto: CreateMemberDto,
+  ): Promise<MemberResponseDto> {
+    // Map DTO to Command
+    const command = new CreateMemberCommand(
+      createMemberDto.firstName,
+      createMemberDto.lastName,
+      createMemberDto.contact,
+      createMemberDto.status,
+      createMemberDto.birthDate ? new Date(createMemberDto.birthDate) : undefined,
+      createMemberDto.baptismDate ? new Date(createMemberDto.baptismDate) : undefined,
+      createMemberDto.joinDate ? new Date(createMemberDto.joinDate) : undefined,
+      createMemberDto.bibleStudy,
+      createMemberDto.typeBibleStudy,
+    );
+
+    const member = await this.memberApplicationService.createMember(command);
+    return MemberResponseDto.fromDomain(member);
+  }
+}
