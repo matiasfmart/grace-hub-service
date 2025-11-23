@@ -38,3 +38,10 @@ export enum RoleType {
   WORKER = 'Worker',
   GENERAL_ATTENDEE = 'GeneralAttendee',
 }
+
+export enum MeetingType {
+  GENERAL = 'general',
+  GDI = 'gdi',
+  YOUTH = 'youth',
+  SPECIAL = 'special',
+}

@@ -7,14 +7,15 @@ import {
 import { Response } from 'express';
 import {
   DomainException,
-  EntityNotFoundException,
   ValidationException,
   BusinessRuleViolationException,
+  EntityNotFoundException,
 } from '../../domain/exceptions/domain.exception';
 
 /**
- * Global exception filter for domain exceptions
- * Translates domain exceptions to HTTP responses
+ * Global Exception Filter for Domain Exceptions
+ *
+ * Translates domain exceptions to appropriate HTTP responses
  */
 @Catch(DomainException)
 export class DomainExceptionFilter implements ExceptionFilter {
@@ -24,12 +25,12 @@ export class DomainExceptionFilter implements ExceptionFilter {
 
     let status = HttpStatus.INTERNAL_SERVER_ERROR;
 
-    if (exception instanceof EntityNotFoundException) {
-      status = HttpStatus.NOT_FOUND;
-    } else if (exception instanceof ValidationException) {
+    if (exception instanceof ValidationException) {
       status = HttpStatus.BAD_REQUEST;
     } else if (exception instanceof BusinessRuleViolationException) {
       status = HttpStatus.UNPROCESSABLE_ENTITY;
+    } else if (exception instanceof EntityNotFoundException) {
+      status = HttpStatus.NOT_FOUND;
     }
 
     response.status(status).json({

@@ -1,7 +1,3 @@
-/**
- * Base class for Value Objects in DDD
- * Value Objects are immutable and compared by value
- */
 export abstract class ValueObject<T> {
   protected readonly props: T;
 
