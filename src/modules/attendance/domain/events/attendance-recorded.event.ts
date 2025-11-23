@@ -1,4 +1,4 @@
-import { DomainEvent } from '../../../../../core/domain/base/domain-event';
+import { DomainEvent } from '../../../../core/domain/base/domain-event';
 import { Attendance } from '../attendance.aggregate';
 
 export class AttendanceRecordedEvent implements DomainEvent {

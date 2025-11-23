@@ -1,5 +1,5 @@
 import { Meeting } from '../../domain/meeting.aggregate';
-import { MeetingType } from '../../../../core/common/constants';
+import { MeetingType } from '../../../../core/common/constants/status.constants';
 
 export class MeetingResponseDto {
   meetingId: number;

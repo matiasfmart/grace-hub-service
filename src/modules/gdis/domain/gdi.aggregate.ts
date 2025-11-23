@@ -1,8 +1,8 @@
-import { AggregateRoot } from '../../../../core/domain/base/aggregate-root';
+import { AggregateRoot } from '../../../core/domain/base/aggregate-root';
 import { GdiName } from './value-objects/gdi-name.vo';
 import { GdiCreatedEvent } from './events/gdi-created.event';
 import { GdiLeadersAssignedEvent } from './events/gdi-leaders-assigned.event';
-import { BusinessRuleViolationException } from '../../../../core/domain/exceptions/domain.exception';
+import { BusinessRuleViolationException } from '../../../core/domain/exceptions/domain.exception';
 
 /**
  * Aggregate Root: GDI (Grupo de Integración Discipular)

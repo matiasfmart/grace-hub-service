@@ -1,4 +1,4 @@
-import { DomainEvent } from '../../../../../core/domain/base/domain-event';
+import { DomainEvent } from '../../../../core/domain/base/domain-event';
 import { Meeting } from '../meeting.aggregate';
 
 export class MeetingCreatedEvent implements DomainEvent {

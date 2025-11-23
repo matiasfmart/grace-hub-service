@@ -1,4 +1,4 @@
-import { AggregateRoot } from '../../../../core/domain/base/aggregate-root';
+import { AggregateRoot } from '../../../core/domain/base/aggregate-root';
 import { AreaName } from './value-objects/area-name.vo';
 import { AreaCreatedEvent } from './events/area-created.event';
 

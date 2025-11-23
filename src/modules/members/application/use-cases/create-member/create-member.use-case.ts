@@ -7,7 +7,7 @@ import { Member } from '../../../domain/member.aggregate';
 import { MemberName } from '../../../domain/value-objects/member-name.vo';
 import { ContactInfo } from '../../../domain/value-objects/contact-info.vo';
 import { CreateMemberCommand } from '../../commands/create-member.command';
-import { MemberStatus } from '../../../../../core/common/constants';
+import { MemberStatus } from '../../../../../core/common/constants/status.constants';
 
 /**
  * Use Case: Create a new Member

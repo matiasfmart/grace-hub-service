@@ -4,7 +4,7 @@ import { Repository, DataSource } from 'typeorm';
 import { MemberEntity } from './member.typeorm.entity';
 import { IMemberRepository } from '../../../domain/repositories/member.repository.interface';
 import { Member } from '../../../domain/member.aggregate';
-import { MemberStatus } from '../../../../../core/common/constants';
+import { MemberStatus } from '../../../../../core/common/constants/status.constants';
 import { BaseRepository } from '../../../../../core/database/postgresql/base.repository';
 import { MemberMapper } from './mappers/member.mapper';
 

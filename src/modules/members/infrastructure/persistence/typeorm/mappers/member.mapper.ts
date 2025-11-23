@@ -2,7 +2,7 @@ import { Member } from '../../../../domain/member.aggregate';
 import { MemberEntity } from '../member.typeorm.entity';
 import { MemberName } from '../../../../domain/value-objects/member-name.vo';
 import { ContactInfo } from '../../../../domain/value-objects/contact-info.vo';
-import { MemberStatus } from '../../../../../../core/common/constants';
+import { MemberStatus } from '../../../../../../core/common/constants/status.constants';
 
 /**
  * Mapper between Domain Aggregate and Infrastructure Entity

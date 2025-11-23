@@ -1,7 +1,7 @@
-import { AggregateRoot } from '../../../../core/domain/base/aggregate-root';
+import { AggregateRoot } from '../../../core/domain/base/aggregate-root';
 import { SeriesName } from './value-objects/series-name.vo';
 import { MeetingCreatedEvent } from './events/meeting-created.event';
-import { MeetingType } from '../../../../core/common/constants';
+import { MeetingType } from '../../../core/common/constants/status.constants';
 
 export class Meeting extends AggregateRoot {
   private constructor(

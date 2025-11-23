@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
-import { RoleType } from '../../../../../core/common/constants';
+import { RoleType } from '../../../../../core/common/constants/status.constants';
 
 @Entity('member_roles')
 export class MemberRoleEntity {

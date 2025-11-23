@@ -1,4 +1,4 @@
-import { MemberStatus } from '../../../../core/common/constants';
+import { MemberStatus } from '../../../../core/common/constants/status.constants';
 
 /**
  * Command for updating a member

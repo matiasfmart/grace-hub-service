@@ -1,5 +1,5 @@
 import { AggregateRoot } from '../../../core/domain/base/aggregate-root';
-import { MemberStatus } from '../../../core/common/constants';
+import { MemberStatus } from '../../../core/common/constants/status.constants';
 import { MemberName } from './value-objects/member-name.vo';
 import { ContactInfo } from './value-objects/contact-info.vo';
 import { MemberCreatedEvent } from './events/member-created.event';

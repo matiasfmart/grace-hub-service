@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
-import { MeetingType } from '../../../../../../core/common/constants';
+import { MeetingType } from '../../../../../core/common/constants/status.constants';
 
 @Entity('meetings')
 export class MeetingEntity {

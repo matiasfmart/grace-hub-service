@@ -1,4 +1,4 @@
-import { DomainEvent } from '../../../../../core/domain/base/domain-event';
+import { DomainEvent } from '../../../../core/domain/base/domain-event';
 import { Area } from '../area.aggregate';
 
 /**

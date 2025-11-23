@@ -1,4 +1,4 @@
-import { MeetingType } from '../../../../core/common/constants';
+import { MeetingType } from '../../../../core/common/constants/status.constants';
 
 export class CreateMeetingCommand {
   constructor(

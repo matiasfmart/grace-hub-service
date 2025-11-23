@@ -1,6 +1,6 @@
-import { AggregateRoot } from '../../../../core/domain/base/aggregate-root';
+import { AggregateRoot } from '../../../core/domain/base/aggregate-root';
 import { RoleAssignedEvent } from './events/role-assigned.event';
-import { RoleType } from '../../../../core/common/constants';
+import { RoleType } from '../../../core/common/constants/status.constants';
 
 export class MemberRole extends AggregateRoot {
   private constructor(

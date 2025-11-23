@@ -1,5 +1,5 @@
 import { Member } from '../member.aggregate';
-import { MemberStatus } from '../../../../core/common/constants';
+import { MemberStatus } from '../../../../core/common/constants/status.constants';
 
 /**
  * Repository interface defined in the Domain layer

@@ -1,5 +1,5 @@
-import { ValueObject } from '../../../../../core/domain/base/value-object';
-import { ValidationException } from '../../../../../core/domain/exceptions/domain.exception';
+import { ValueObject } from '../../../../core/domain/base/value-object';
+import { ValidationException } from '../../../../core/domain/exceptions/domain.exception';
 
 interface SeriesNameProps {
   value: string;

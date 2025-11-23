@@ -1,5 +1,5 @@
 import { MemberRole } from '../../domain/member-role.aggregate';
-import { RoleType } from '../../../../core/common/constants';
+import { RoleType } from '../../../../core/common/constants/status.constants';
 
 export class RoleResponseDto {
   roleId: number;

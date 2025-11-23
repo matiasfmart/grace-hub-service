@@ -1,5 +1,5 @@
 import { IsString, IsDateString, IsEnum, IsOptional, MaxLength } from 'class-validator';
-import { MeetingType } from '../../../../core/common/constants';
+import { MeetingType } from '../../../../core/common/constants/status.constants';
 
 export class UpdateMeetingDto {
   @IsOptional()

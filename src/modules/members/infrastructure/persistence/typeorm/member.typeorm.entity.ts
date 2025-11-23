@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
-import { MemberStatus } from '../../../../../core/common/constants';
+import { MemberStatus } from '../../../../../core/common/constants/status.constants';
 
 @Entity('members')
 export class MemberEntity {

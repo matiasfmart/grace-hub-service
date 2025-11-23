@@ -1,5 +1,5 @@
 import { IsString, IsOptional, IsEnum, IsBoolean, IsDateString } from 'class-validator';
-import { MemberStatus } from '../../../../core/common/constants';
+import { MemberStatus } from '../../../../core/common/constants/status.constants';
 
 export class CreateMemberDto {
   @IsString()

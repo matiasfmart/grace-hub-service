@@ -1,4 +1,4 @@
-import { RoleType } from '../../../../core/common/constants';
+import { RoleType } from '../../../../core/common/constants/status.constants';
 
 export class CreateRoleCommand {
   constructor(

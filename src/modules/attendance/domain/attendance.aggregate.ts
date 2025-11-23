@@ -1,4 +1,4 @@
-import { AggregateRoot } from '../../../../core/domain/base/aggregate-root';
+import { AggregateRoot } from '../../../core/domain/base/aggregate-root';
 import { AttendanceRecordedEvent } from './events/attendance-recorded.event';
 
 export class Attendance extends AggregateRoot {

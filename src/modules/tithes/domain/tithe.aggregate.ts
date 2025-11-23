@@ -1,4 +1,4 @@
-import { AggregateRoot } from '../../../../core/domain/base/aggregate-root';
+import { AggregateRoot } from '../../../core/domain/base/aggregate-root';
 import { TitheRecordedEvent } from './events/tithe-recorded.event';
 
 export class Tithe extends AggregateRoot {

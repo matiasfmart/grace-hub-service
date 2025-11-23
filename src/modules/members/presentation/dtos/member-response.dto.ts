@@ -1,5 +1,5 @@
 import { Member } from '../../domain/member.aggregate';
-import { MemberStatus } from '../../../../core/common/constants';
+import { MemberStatus } from '../../../../core/common/constants/status.constants';
 
 /**
  * Response DTO for Member
