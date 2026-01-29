@@ -3,11 +3,15 @@ import {
   Get,
   Post,
   Body,
+  Param,
+  Query,
   HttpCode,
   HttpStatus,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { AttendanceApplicationService } from '../../application/services/attendance-application.service';
 import { CreateAttendanceDto } from '../dtos/create-attendance.dto';
+import { SaveAttendanceForMeetingDto } from '../dtos/save-attendance-for-meeting.dto';
 import { AttendanceResponseDto } from '../dtos/attendance-response.dto';
 import { CreateAttendanceCommand } from '../../application/commands/create-attendance.command';
 
@@ -31,8 +35,41 @@ export class AttendanceController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  async findAll(): Promise<AttendanceResponseDto[]> {
+  async findAll(
+    @Query('meetingId') meetingId?: string,
+    @Query('memberId') memberId?: string,
+  ): Promise<AttendanceResponseDto[]> {
+    // Filter by meeting
+    if (meetingId) {
+      const attendances = await this.attendanceApplicationService.getAttendanceByMeeting(
+        parseInt(meetingId, 10),
+      );
+      return AttendanceResponseDto.fromDomainArray(attendances);
+    }
+
+    // Filter by member
+    if (memberId) {
+      const attendances = await this.attendanceApplicationService.getAttendanceByMember(
+        parseInt(memberId, 10),
+      );
+      return AttendanceResponseDto.fromDomainArray(attendances);
+    }
+
+    // Return all
     const attendances = await this.attendanceApplicationService.getAllAttendances();
+    return AttendanceResponseDto.fromDomainArray(attendances);
+  }
+
+  @Post('meeting/:meetingId')
+  @HttpCode(HttpStatus.OK)
+  async saveForMeeting(
+    @Param('meetingId', ParseIntPipe) meetingId: number,
+    @Body() dto: SaveAttendanceForMeetingDto,
+  ): Promise<AttendanceResponseDto[]> {
+    const attendances = await this.attendanceApplicationService.saveAttendanceForMeeting(
+      meetingId,
+      dto.attendances,
+    );
     return AttendanceResponseDto.fromDomainArray(attendances);
   }
 }

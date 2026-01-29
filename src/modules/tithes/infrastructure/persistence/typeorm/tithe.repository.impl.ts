@@ -26,6 +26,12 @@ export class TitheRepositoryImpl
     return TitheMapper.toDomain(savedEntity);
   }
 
+  async saveMany(tithes: Tithe[]): Promise<Tithe[]> {
+    const entities = tithes.map(tithe => TitheMapper.toPersistence(tithe));
+    const savedEntities = await this.titheRepository.save(entities);
+    return TitheMapper.toDomainArray(savedEntities);
+  }
+
   async findById(id: number): Promise<Tithe | null> {
     const entity = await this.titheRepository.findOne({
       where: { titheId: id },
@@ -52,8 +58,26 @@ export class TitheRepositoryImpl
     return TitheMapper.toDomainArray(entities);
   }
 
+  async findByYearAndMonth(year: number, month: number): Promise<Tithe[]> {
+    const entities = await this.titheRepository.find({
+      where: { year, month },
+    });
+    return TitheMapper.toDomainArray(entities);
+  }
+
+  async findByMemberYearMonth(memberId: number, year: number, month: number): Promise<Tithe | null> {
+    const entity = await this.titheRepository.findOne({
+      where: { memberId, year, month },
+    });
+    return entity ? TitheMapper.toDomain(entity) : null;
+  }
+
   async delete(id: number): Promise<void> {
     await this.titheRepository.delete(id);
+  }
+
+  async deleteByMemberYearMonth(memberId: number, year: number, month: number): Promise<void> {
+    await this.titheRepository.delete({ memberId, year, month });
   }
 
   async exists(id: number): Promise<boolean> {

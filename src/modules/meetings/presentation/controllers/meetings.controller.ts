@@ -3,6 +3,7 @@ import {
   Get,
   Post,
   Put,
+  Delete,
   Param,
   Body,
   HttpCode,
@@ -15,6 +16,7 @@ import { UpdateMeetingDto } from '../dtos/update-meeting.dto';
 import { MeetingResponseDto } from '../dtos/meeting-response.dto';
 import { CreateMeetingCommand } from '../../application/commands/create-meeting.command';
 import { UpdateMeetingCommand } from '../../application/commands/update-meeting.command';
+import { DeleteMeetingCommand } from '../../application/commands/delete-meeting.command';
 
 @Controller('meetings')
 export class MeetingsController {
@@ -64,5 +66,12 @@ export class MeetingsController {
     );
     const meeting = await this.meetingApplicationService.updateMeeting(command);
     return MeetingResponseDto.fromDomain(meeting);
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async delete(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    const command = new DeleteMeetingCommand(id);
+    await this.meetingApplicationService.deleteMeeting(command);
   }
 }

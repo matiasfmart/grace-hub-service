@@ -10,6 +10,7 @@ import { CreateGdiUseCase } from './application/use-cases/create-gdi/create-gdi.
 import { GetAllGdisUseCase } from './application/use-cases/get-gdi/get-all-gdis.use-case';
 import { GetGdiByIdUseCase } from './application/use-cases/get-gdi/get-gdi-by-id.use-case';
 import { UpdateGdiUseCase } from './application/use-cases/update-gdi/update-gdi.use-case';
+import { DeleteGdiUseCase } from './application/use-cases/delete-gdi/delete-gdi.use-case';
 
 // Infrastructure Layer
 import { GdiEntity } from './infrastructure/persistence/typeorm/gdi.typeorm.entity';
@@ -44,6 +45,7 @@ import { GDI_REPOSITORY } from './domain/repositories/gdi.repository.interface';
     GetAllGdisUseCase,
     GetGdiByIdUseCase,
     UpdateGdiUseCase,
+    DeleteGdiUseCase,
 
     // Repository Implementation (bound to domain interface)
     {

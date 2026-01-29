@@ -3,8 +3,10 @@ import { CreateMeetingUseCase } from '../use-cases/create-meeting/create-meeting
 import { GetAllMeetingsUseCase } from '../use-cases/get-meeting/get-all-meetings.use-case';
 import { GetMeetingByIdUseCase } from '../use-cases/get-meeting/get-meeting-by-id.use-case';
 import { UpdateMeetingUseCase } from '../use-cases/update-meeting/update-meeting.use-case';
+import { DeleteMeetingUseCase } from '../use-cases/delete-meeting/delete-meeting.use-case';
 import { CreateMeetingCommand } from '../commands/create-meeting.command';
 import { UpdateMeetingCommand } from '../commands/update-meeting.command';
+import { DeleteMeetingCommand } from '../commands/delete-meeting.command';
 import { Meeting } from '../../domain/meeting.aggregate';
 
 @Injectable()
@@ -14,6 +16,7 @@ export class MeetingApplicationService {
     private readonly getAllMeetingsUseCase: GetAllMeetingsUseCase,
     private readonly getMeetingByIdUseCase: GetMeetingByIdUseCase,
     private readonly updateMeetingUseCase: UpdateMeetingUseCase,
+    private readonly deleteMeetingUseCase: DeleteMeetingUseCase,
   ) {}
 
   async createMeeting(command: CreateMeetingCommand): Promise<Meeting> {
@@ -30,5 +33,9 @@ export class MeetingApplicationService {
 
   async updateMeeting(command: UpdateMeetingCommand): Promise<Meeting> {
     return await this.updateMeetingUseCase.execute(command);
+  }
+
+  async deleteMeeting(command: DeleteMeetingCommand): Promise<void> {
+    return await this.deleteMeetingUseCase.execute(command);
   }
 }

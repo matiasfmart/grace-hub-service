@@ -26,6 +26,12 @@ export class AttendanceRepositoryImpl
     return AttendanceMapper.toDomain(savedEntity);
   }
 
+  async saveMany(attendances: Attendance[]): Promise<Attendance[]> {
+    const entities = attendances.map(a => AttendanceMapper.toPersistence(a));
+    const savedEntities = await this.attendanceRepository.save(entities);
+    return AttendanceMapper.toDomainArray(savedEntities);
+  }
+
   async findById(id: number): Promise<Attendance | null> {
     const entity = await this.attendanceRepository.findOne({
       where: { attendanceId: id },
@@ -52,8 +58,19 @@ export class AttendanceRepositoryImpl
     return AttendanceMapper.toDomainArray(entities);
   }
 
+  async findByMeetingAndMember(meetingId: number, memberId: number): Promise<Attendance | null> {
+    const entity = await this.attendanceRepository.findOne({
+      where: { meetingId, memberId },
+    });
+    return entity ? AttendanceMapper.toDomain(entity) : null;
+  }
+
   async delete(id: number): Promise<void> {
     await this.attendanceRepository.delete(id);
+  }
+
+  async deleteByMeeting(meetingId: number): Promise<void> {
+    await this.attendanceRepository.delete({ meetingId });
   }
 
   async exists(id: number): Promise<boolean> {

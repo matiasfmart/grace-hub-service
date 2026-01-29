@@ -3,6 +3,7 @@ import {
   Get,
   Post,
   Put,
+  Delete,
   Param,
   Body,
   HttpCode,
@@ -15,6 +16,7 @@ import { UpdateAreaDto } from '../dtos/update-area.dto';
 import { AreaResponseDto } from '../dtos/area-response.dto';
 import { CreateAreaCommand } from '../../application/commands/create-area.command';
 import { UpdateAreaCommand } from '../../application/commands/update-area.command';
+import { DeleteAreaCommand } from '../../application/commands/delete-area.command';
 
 @Controller('areas')
 export class AreasController {
@@ -55,5 +57,12 @@ export class AreasController {
     const command = new UpdateAreaCommand(id, dto.name, dto.description);
     const area = await this.areaApplicationService.updateArea(command);
     return AreaResponseDto.fromDomain(area);
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    const command = new DeleteAreaCommand(id);
+    await this.areaApplicationService.deleteArea(command);
   }
 }

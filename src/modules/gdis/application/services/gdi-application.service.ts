@@ -3,8 +3,10 @@ import { CreateGdiUseCase } from '../use-cases/create-gdi/create-gdi.use-case';
 import { GetAllGdisUseCase } from '../use-cases/get-gdi/get-all-gdis.use-case';
 import { GetGdiByIdUseCase } from '../use-cases/get-gdi/get-gdi-by-id.use-case';
 import { UpdateGdiUseCase } from '../use-cases/update-gdi/update-gdi.use-case';
+import { DeleteGdiUseCase } from '../use-cases/delete-gdi/delete-gdi.use-case';
 import { CreateGdiCommand } from '../commands/create-gdi.command';
 import { UpdateGdiCommand } from '../commands/update-gdi.command';
+import { DeleteGdiCommand } from '../commands/delete-gdi.command';
 import { Gdi } from '../../domain/gdi.aggregate';
 
 /**
@@ -20,6 +22,7 @@ export class GdiApplicationService {
     private readonly getAllGdisUseCase: GetAllGdisUseCase,
     private readonly getGdiByIdUseCase: GetGdiByIdUseCase,
     private readonly updateGdiUseCase: UpdateGdiUseCase,
+    private readonly deleteGdiUseCase: DeleteGdiUseCase,
   ) {}
 
   async createGdi(command: CreateGdiCommand): Promise<Gdi> {
@@ -36,5 +39,9 @@ export class GdiApplicationService {
 
   async updateGdi(command: UpdateGdiCommand): Promise<Gdi> {
     return await this.updateGdiUseCase.execute(command);
+  }
+
+  async deleteGdi(command: DeleteGdiCommand): Promise<void> {
+    return await this.deleteGdiUseCase.execute(command);
   }
 }

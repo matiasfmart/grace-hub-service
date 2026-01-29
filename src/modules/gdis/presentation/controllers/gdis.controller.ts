@@ -3,6 +3,7 @@ import {
   Get,
   Post,
   Put,
+  Delete,
   Param,
   Body,
   HttpCode,
@@ -15,6 +16,7 @@ import { UpdateGdiDto } from '../dtos/update-gdi.dto';
 import { GdiResponseDto } from '../dtos/gdi-response.dto';
 import { CreateGdiCommand } from '../../application/commands/create-gdi.command';
 import { UpdateGdiCommand } from '../../application/commands/update-gdi.command';
+import { DeleteGdiCommand } from '../../application/commands/delete-gdi.command';
 
 /**
  * Controller: GDIs
@@ -74,5 +76,12 @@ export class GdisController {
     const gdi = await this.gdiApplicationService.updateGdi(command);
 
     return GdiResponseDto.fromDomain(gdi);
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    const command = new DeleteGdiCommand(id);
+    await this.gdiApplicationService.deleteGdi(command);
   }
 }

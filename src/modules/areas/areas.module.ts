@@ -6,6 +6,7 @@ import { CreateAreaUseCase } from './application/use-cases/create-area/create-ar
 import { GetAllAreasUseCase } from './application/use-cases/get-area/get-all-areas.use-case';
 import { GetAreaByIdUseCase } from './application/use-cases/get-area/get-area-by-id.use-case';
 import { UpdateAreaUseCase } from './application/use-cases/update-area/update-area.use-case';
+import { DeleteAreaUseCase } from './application/use-cases/delete-area/delete-area.use-case';
 import { AreaEntity } from './infrastructure/persistence/typeorm/area.typeorm.entity';
 import { AreaRepositoryImpl } from './infrastructure/persistence/typeorm/area.repository.impl';
 import { AREA_REPOSITORY } from './domain/repositories/area.repository.interface';
@@ -19,6 +20,7 @@ import { AREA_REPOSITORY } from './domain/repositories/area.repository.interface
     GetAllAreasUseCase,
     GetAreaByIdUseCase,
     UpdateAreaUseCase,
+    DeleteAreaUseCase,
     {
       provide: AREA_REPOSITORY,
       useClass: AreaRepositoryImpl,

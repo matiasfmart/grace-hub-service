@@ -2,6 +2,8 @@ import {
   Controller,
   Get,
   Post,
+  Put,
+  Delete,
   Body,
   Param,
   ParseIntPipe,
@@ -10,8 +12,11 @@ import {
 } from '@nestjs/common';
 import { MemberApplicationService } from '../../application/services/member-application.service';
 import { CreateMemberDto } from '../dtos/create-member.dto';
+import { UpdateMemberDto } from '../dtos/update-member.dto';
 import { MemberResponseDto } from '../dtos/member-response.dto';
 import { CreateMemberCommand } from '../../application/commands/create-member.command';
+import { UpdateMemberCommand } from '../../application/commands/update-member.command';
+import { DeleteMemberCommand } from '../../application/commands/delete-member.command';
 
 /**
  * Members Controller (Presentation Layer)
@@ -63,5 +68,35 @@ export class MembersController {
 
     const member = await this.memberApplicationService.createMember(command);
     return MemberResponseDto.fromDomain(member);
+  }
+
+  @Put(':id')
+  @HttpCode(HttpStatus.OK)
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateMemberDto: UpdateMemberDto,
+  ): Promise<MemberResponseDto> {
+    const command = new UpdateMemberCommand(
+      id,
+      updateMemberDto.firstName,
+      updateMemberDto.lastName,
+      updateMemberDto.contact,
+      updateMemberDto.status,
+      updateMemberDto.birthDate ? new Date(updateMemberDto.birthDate) : undefined,
+      updateMemberDto.baptismDate ? new Date(updateMemberDto.baptismDate) : undefined,
+      updateMemberDto.joinDate ? new Date(updateMemberDto.joinDate) : undefined,
+      updateMemberDto.bibleStudy,
+      updateMemberDto.typeBibleStudy,
+    );
+
+    const member = await this.memberApplicationService.updateMember(command);
+    return MemberResponseDto.fromDomain(member);
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    const command = new DeleteMemberCommand(id);
+    await this.memberApplicationService.deleteMember(command);
   }
 }

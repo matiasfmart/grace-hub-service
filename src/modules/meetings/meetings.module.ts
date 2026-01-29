@@ -6,6 +6,7 @@ import { CreateMeetingUseCase } from './application/use-cases/create-meeting/cre
 import { GetAllMeetingsUseCase } from './application/use-cases/get-meeting/get-all-meetings.use-case';
 import { GetMeetingByIdUseCase } from './application/use-cases/get-meeting/get-meeting-by-id.use-case';
 import { UpdateMeetingUseCase } from './application/use-cases/update-meeting/update-meeting.use-case';
+import { DeleteMeetingUseCase } from './application/use-cases/delete-meeting/delete-meeting.use-case';
 import { MeetingEntity } from './infrastructure/persistence/typeorm/meeting.typeorm.entity';
 import { MeetingRepositoryImpl } from './infrastructure/persistence/typeorm/meeting.repository.impl';
 import { MEETING_REPOSITORY } from './domain/repositories/meeting.repository.interface';
@@ -19,6 +20,7 @@ import { MEETING_REPOSITORY } from './domain/repositories/meeting.repository.int
     GetAllMeetingsUseCase,
     GetMeetingByIdUseCase,
     UpdateMeetingUseCase,
+    DeleteMeetingUseCase,
     {
       provide: MEETING_REPOSITORY,
       useClass: MeetingRepositoryImpl,

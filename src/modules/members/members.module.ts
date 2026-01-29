@@ -9,6 +9,8 @@ import { MemberApplicationService } from './application/services/member-applicat
 import { CreateMemberUseCase } from './application/use-cases/create-member/create-member.use-case';
 import { GetAllMembersUseCase } from './application/use-cases/get-member/get-all-members.use-case';
 import { GetMemberByIdUseCase } from './application/use-cases/get-member/get-member-by-id.use-case';
+import { UpdateMemberUseCase } from './application/use-cases/update-member/update-member.use-case';
+import { DeleteMemberUseCase } from './application/use-cases/delete-member/delete-member.use-case';
 
 // Infrastructure Layer
 import { MemberEntity } from './infrastructure/persistence/typeorm/member.typeorm.entity';
@@ -42,6 +44,8 @@ import { MEMBER_REPOSITORY } from './domain/repositories/member.repository.inter
     CreateMemberUseCase,
     GetAllMembersUseCase,
     GetMemberByIdUseCase,
+    UpdateMemberUseCase,
+    DeleteMemberUseCase,
 
     // Repository Implementation (bound to domain interface)
     {
