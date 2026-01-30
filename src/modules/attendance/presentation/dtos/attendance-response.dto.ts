@@ -5,8 +5,8 @@ export class AttendanceResponseDto {
   meetingId: number;
   memberId: number;
   wasPresent: boolean;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;  // ISO string for TIMESTAMP
+  updatedAt: string;  // ISO string for TIMESTAMP
 
   static fromDomain(attendance: Attendance): AttendanceResponseDto {
     const dto = new AttendanceResponseDto();
@@ -14,8 +14,8 @@ export class AttendanceResponseDto {
     dto.meetingId = attendance.meetingId;
     dto.memberId = attendance.memberId;
     dto.wasPresent = attendance.wasPresent;
-    dto.createdAt = attendance.createdAt!;
-    dto.updatedAt = attendance.updatedAt!;
+    dto.createdAt = attendance.createdAt!.toISOString();
+    dto.updatedAt = attendance.updatedAt!.toISOString();
     return dto;
   }
 

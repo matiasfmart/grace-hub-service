@@ -5,8 +5,8 @@ export class TitheResponseDto {
   memberId: number;
   year: number;
   month: number;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;  // ISO string for TIMESTAMP
+  updatedAt: string;  // ISO string for TIMESTAMP
 
   static fromDomain(tithe: Tithe): TitheResponseDto {
     const dto = new TitheResponseDto();
@@ -14,8 +14,8 @@ export class TitheResponseDto {
     dto.memberId = tithe.memberId;
     dto.year = tithe.year;
     dto.month = tithe.month;
-    dto.createdAt = tithe.createdAt!;
-    dto.updatedAt = tithe.updatedAt!;
+    dto.createdAt = tithe.createdAt!.toISOString();
+    dto.updatedAt = tithe.updatedAt!.toISOString();
     return dto;
   }
 

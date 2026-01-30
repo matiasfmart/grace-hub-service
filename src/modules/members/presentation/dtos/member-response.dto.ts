@@ -20,6 +20,14 @@ export class MemberResponseDto {
   createdAt: string;
   updatedAt: string;
 
+  /**
+   * Formats a Date to YYYY-MM-DD string for DATE columns
+   */
+  private static toDateString(date: Date | undefined): string | undefined {
+    if (!date) return undefined;
+    return date.toISOString().split('T')[0];
+  }
+
   static fromDomain(member: Member): MemberResponseDto {
     const dto = new MemberResponseDto();
 
@@ -29,11 +37,13 @@ export class MemberResponseDto {
     dto.fullName = member.name.fullName;
     dto.contact = member.contact?.value;
     dto.status = member.status;
-    dto.birthDate = member.birthDate?.toISOString();
-    dto.baptismDate = member.baptismDate?.toISOString();
-    dto.joinDate = member.joinDate?.toISOString();
+    // DATE columns: YYYY-MM-DD format
+    dto.birthDate = this.toDateString(member.birthDate);
+    dto.baptismDate = this.toDateString(member.baptismDate);
+    dto.joinDate = this.toDateString(member.joinDate);
     dto.bibleStudy = member.bibleStudy;
     dto.typeBibleStudy = member.typeBibleStudy;
+    // TIMESTAMP columns: Full ISO format
     dto.createdAt = member.createdAt.toISOString();
     dto.updatedAt = member.updatedAt.toISOString();
 

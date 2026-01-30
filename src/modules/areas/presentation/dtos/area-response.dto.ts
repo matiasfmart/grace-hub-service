@@ -4,16 +4,16 @@ export class AreaResponseDto {
   areaId: number;
   name: string;
   description?: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;  // ISO string for TIMESTAMP
+  updatedAt: string;  // ISO string for TIMESTAMP
 
   static fromDomain(area: Area): AreaResponseDto {
     const dto = new AreaResponseDto();
     dto.areaId = area.id!;
     dto.name = area.name.value;
     dto.description = area.description;
-    dto.createdAt = area.createdAt!;
-    dto.updatedAt = area.updatedAt!;
+    dto.createdAt = area.createdAt!.toISOString();
+    dto.updatedAt = area.updatedAt!.toISOString();
     return dto;
   }
 

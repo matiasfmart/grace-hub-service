@@ -10,8 +10,8 @@ export class GdiResponseDto {
   name: string;
   guideId?: number;
   mentorId?: number;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;  // ISO string for TIMESTAMP
+  updatedAt: string;  // ISO string for TIMESTAMP
 
   static fromDomain(gdi: Gdi): GdiResponseDto {
     const dto = new GdiResponseDto();
@@ -19,8 +19,8 @@ export class GdiResponseDto {
     dto.name = gdi.name.value;
     dto.guideId = gdi.guideId;
     dto.mentorId = gdi.mentorId;
-    dto.createdAt = gdi.createdAt!;
-    dto.updatedAt = gdi.updatedAt!;
+    dto.createdAt = gdi.createdAt!.toISOString();
+    dto.updatedAt = gdi.updatedAt!.toISOString();
     return dto;
   }
 

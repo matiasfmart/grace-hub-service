@@ -1,5 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { MemberStatus } from '../../../../../core/common/constants/status.constants';
+import { DateTransformer } from '../../../../../core/infrastructure/transformers';
 
 @Entity('members')
 export class MemberEntity {
@@ -23,13 +24,13 @@ export class MemberEntity {
   })
   status: MemberStatus;
 
-  @Column({ name: 'birth_date', type: 'date', nullable: true })
+  @Column({ name: 'birth_date', type: 'date', nullable: true, transformer: DateTransformer })
   birthDate?: Date;
 
-  @Column({ name: 'baptism_date', type: 'date', nullable: true })
+  @Column({ name: 'baptism_date', type: 'date', nullable: true, transformer: DateTransformer })
   baptismDate?: Date;
 
-  @Column({ name: 'join_date', type: 'date', nullable: true })
+  @Column({ name: 'join_date', type: 'date', nullable: true, transformer: DateTransformer })
   joinDate?: Date;
 
   @Column({ name: 'bible_study', type: 'boolean', default: false })

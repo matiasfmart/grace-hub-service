@@ -1,5 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { MeetingType } from '../../../../../core/common/constants/status.constants';
+import { DateTransformer } from '../../../../../core/infrastructure/transformers';
 
 @Entity('meetings')
 export class MeetingEntity {
@@ -9,7 +10,7 @@ export class MeetingEntity {
   @Column({ name: 'series_name', type: 'varchar', length: 255 })
   seriesName: string;
 
-  @Column({ name: 'date', type: 'date' })
+  @Column({ name: 'date', type: 'date', transformer: DateTransformer })
   date: Date;
 
   @Column({
