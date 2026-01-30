@@ -52,6 +52,30 @@ export class UpdateMemberUseCase {
       member.changeStatus(command.status);
     }
 
+    // Update birthDate if provided
+    if (command.birthDate !== undefined) {
+      member.updateBirthDate(command.birthDate);
+    }
+
+    // Update baptismDate if provided
+    if (command.baptismDate !== undefined) {
+      member.markAsBaptized(command.baptismDate);
+    }
+
+    // Update joinDate if provided
+    if (command.joinDate !== undefined) {
+      member.updateJoinDate(command.joinDate);
+    }
+
+    // Update bibleStudy if provided
+    if (command.bibleStudy !== undefined) {
+      if (command.bibleStudy && command.typeBibleStudy) {
+        member.enrollInBibleStudy(command.typeBibleStudy);
+      } else if (!command.bibleStudy) {
+        member.withdrawFromBibleStudy();
+      }
+    }
+
     // Update address if provided
     if (command.address !== undefined) {
       member.updateAddress(command.address);

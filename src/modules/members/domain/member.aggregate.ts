@@ -164,8 +164,18 @@ export class Member extends AggregateRoot {
     this.addDomainEvent(new MemberStatusChangedEvent(this, oldStatus, newStatus));
   }
 
-  public markAsBaptized(baptismDate: Date): void {
+  public markAsBaptized(baptismDate: Date | undefined): void {
     this._baptismDate = baptismDate;
+    this.touch();
+  }
+
+  public updateBirthDate(birthDate: Date | undefined): void {
+    this._birthDate = birthDate;
+    this.touch();
+  }
+
+  public updateJoinDate(joinDate: Date | undefined): void {
+    this._joinDate = joinDate;
     this.touch();
   }
 
