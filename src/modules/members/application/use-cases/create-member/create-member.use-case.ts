@@ -42,6 +42,7 @@ export class CreateMemberUseCase {
       command.joinDate,
       command.bibleStudy,
       command.typeBibleStudy,
+      command.address,
     );
 
     // Persist aggregate

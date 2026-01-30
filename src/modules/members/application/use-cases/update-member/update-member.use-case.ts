@@ -52,6 +52,11 @@ export class UpdateMemberUseCase {
       member.changeStatus(command.status);
     }
 
+    // Update address if provided
+    if (command.address !== undefined) {
+      member.updateAddress(command.address);
+    }
+
     // Persist changes
     const updatedMember = await this.memberRepository.save(member);
 

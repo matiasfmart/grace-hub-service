@@ -2,7 +2,7 @@ import {
   Controller,
   Get,
   Post,
-  Put,
+  Patch,
   Delete,
   Body,
   Param,
@@ -64,13 +64,14 @@ export class MembersController {
       createMemberDto.joinDate ? new Date(createMemberDto.joinDate) : undefined,
       createMemberDto.bibleStudy,
       createMemberDto.typeBibleStudy,
+      createMemberDto.address,
     );
 
     const member = await this.memberApplicationService.createMember(command);
     return MemberResponseDto.fromDomain(member);
   }
 
-  @Put(':id')
+  @Patch(':id')
   @HttpCode(HttpStatus.OK)
   async update(
     @Param('id', ParseIntPipe) id: number,
@@ -87,6 +88,7 @@ export class MembersController {
       updateMemberDto.joinDate ? new Date(updateMemberDto.joinDate) : undefined,
       updateMemberDto.bibleStudy,
       updateMemberDto.typeBibleStudy,
+      updateMemberDto.address,
     );
 
     const member = await this.memberApplicationService.updateMember(command);

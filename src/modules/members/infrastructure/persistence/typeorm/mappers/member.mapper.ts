@@ -28,6 +28,7 @@ export class MemberMapper {
     entity.joinDate = member.joinDate;
     entity.bibleStudy = member.bibleStudy;
     entity.typeBibleStudy = member.typeBibleStudy;
+    entity.address = member.address;
     entity.createdAt = member.createdAt;
     entity.updatedAt = member.updatedAt;
 
@@ -51,6 +52,7 @@ export class MemberMapper {
       entity.joinDate ?? undefined,
       entity.bibleStudy,
       entity.typeBibleStudy,
+      entity.address,
       entity.createdAt,
       entity.updatedAt,
     );

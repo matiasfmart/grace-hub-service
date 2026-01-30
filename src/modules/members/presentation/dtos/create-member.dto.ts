@@ -35,4 +35,8 @@ export class CreateMemberDto {
   @IsOptional()
   @IsString()
   typeBibleStudy?: string;
+
+  @IsOptional()
+  @IsString()
+  address?: string;
 }

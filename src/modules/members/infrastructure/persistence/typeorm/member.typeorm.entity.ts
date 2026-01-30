@@ -39,6 +39,9 @@ export class MemberEntity {
   @Column({ name: 'type_bible_study', type: 'varchar', length: 100, nullable: true })
   typeBibleStudy?: string;
 
+  @Column({ name: 'address', type: 'text', nullable: true })
+  address?: string;
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 

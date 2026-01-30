@@ -41,4 +41,8 @@ export class UpdateMemberDto {
   @IsOptional()
   @IsString()
   typeBibleStudy?: string;
+
+  @IsOptional()
+  @IsString()
+  address?: string;
 }

@@ -17,6 +17,7 @@ export class MemberResponseDto {
   joinDate?: string;
   bibleStudy: boolean;
   typeBibleStudy?: string;
+  address?: string;
   createdAt: string;
   updatedAt: string;
 
@@ -43,6 +44,7 @@ export class MemberResponseDto {
     dto.joinDate = this.toDateString(member.joinDate);
     dto.bibleStudy = member.bibleStudy;
     dto.typeBibleStudy = member.typeBibleStudy;
+    dto.address = member.address;
     // TIMESTAMP columns: Full ISO format
     dto.createdAt = member.createdAt.toISOString();
     dto.updatedAt = member.updatedAt.toISOString();

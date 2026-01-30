@@ -15,5 +15,6 @@ export class UpdateMemberCommand {
     public readonly joinDate?: Date,
     public readonly bibleStudy?: boolean,
     public readonly typeBibleStudy?: string,
+    public readonly address?: string,
   ) {}
 }

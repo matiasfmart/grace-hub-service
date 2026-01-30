@@ -20,6 +20,7 @@ export class Member extends AggregateRoot {
     private _joinDate: Date | undefined,
     private _bibleStudy: boolean,
     private _typeBibleStudy: string | undefined,
+    private _address: string | undefined,
     private readonly _createdAt: Date,
     private _updatedAt: Date,
   ) {
@@ -63,6 +64,10 @@ export class Member extends AggregateRoot {
     return this._typeBibleStudy;
   }
 
+  get address(): string | undefined {
+    return this._address;
+  }
+
   get createdAt(): Date {
     return this._createdAt;
   }
@@ -81,6 +86,7 @@ export class Member extends AggregateRoot {
     joinDate?: Date,
     bibleStudy: boolean = false,
     typeBibleStudy?: string,
+    address?: string,
   ): Member {
     const member = new Member(
       undefined, // id is undefined for new members
@@ -92,6 +98,7 @@ export class Member extends AggregateRoot {
       joinDate,
       bibleStudy,
       typeBibleStudy,
+      address,
       new Date(),
       new Date(),
     );
@@ -113,6 +120,7 @@ export class Member extends AggregateRoot {
     joinDate: Date | undefined,
     bibleStudy: boolean,
     typeBibleStudy: string | undefined,
+    address: string | undefined,
     createdAt: Date,
     updatedAt: Date,
   ): Member {
@@ -126,6 +134,7 @@ export class Member extends AggregateRoot {
       joinDate,
       bibleStudy,
       typeBibleStudy,
+      address,
       createdAt,
       updatedAt,
     );
@@ -169,6 +178,11 @@ export class Member extends AggregateRoot {
   public withdrawFromBibleStudy(): void {
     this._bibleStudy = false;
     this._typeBibleStudy = undefined;
+    this.touch();
+  }
+
+  public updateAddress(address: string | undefined): void {
+    this._address = address;
     this.touch();
   }
 
