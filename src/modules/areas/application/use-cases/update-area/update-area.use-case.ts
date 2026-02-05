@@ -30,6 +30,11 @@ export class UpdateAreaUseCase {
       area.updateDescription(command.description);
     }
 
+    // Update leaders if provided
+    if (command.leaderId !== undefined || command.mentorId !== undefined) {
+      area.assignLeaders(command.leaderId, command.mentorId);
+    }
+
     const updatedArea = await this.areaRepository.save(area);
     updatedArea.clearEvents();
     return updatedArea;

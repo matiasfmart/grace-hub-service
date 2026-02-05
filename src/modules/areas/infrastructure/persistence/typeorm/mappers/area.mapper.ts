@@ -11,10 +11,8 @@ export class AreaMapper {
     }
 
     entity.name = domain.name.value;
-    // Note: Entity has leaderId/mentorId but aggregate has description
-    // Using description as placeholder until schema is clarified
-    entity.leaderId = undefined;
-    entity.mentorId = undefined;
+    entity.leaderId = domain.leaderId;
+    entity.mentorId = domain.mentorId;
 
     if (domain.createdAt) {
       entity.createdAt = domain.createdAt;
@@ -32,7 +30,9 @@ export class AreaMapper {
     return Area.reconstitute(
       entity.areaId,
       name,
-      undefined, // description - entity doesn't have this field
+      undefined, // description - not stored in DB
+      entity.leaderId,
+      entity.mentorId,
       entity.createdAt,
       entity.updatedAt,
     );

@@ -1,4 +1,4 @@
-import { IsString, IsOptional, MaxLength } from 'class-validator';
+import { IsString, IsOptional, MaxLength, IsInt, IsPositive } from 'class-validator';
 
 export class CreateAreaDto {
   @IsString()
@@ -8,4 +8,14 @@ export class CreateAreaDto {
   @IsOptional()
   @IsString()
   description?: string;
+
+  @IsOptional()
+  @IsInt()
+  @IsPositive()
+  leaderId?: number;
+
+  @IsOptional()
+  @IsInt()
+  @IsPositive()
+  mentorId?: number;
 }

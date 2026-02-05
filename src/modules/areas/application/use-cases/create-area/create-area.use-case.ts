@@ -16,7 +16,12 @@ export class CreateAreaUseCase {
 
   async execute(command: CreateAreaCommand): Promise<Area> {
     const name = AreaName.create(command.name);
-    const area = Area.create(name, command.description);
+    const area = Area.create(
+      name,
+      command.description,
+      command.leaderId,
+      command.mentorId,
+    );
     const savedArea = await this.areaRepository.save(area);
     savedArea.clearEvents();
     return savedArea;

@@ -4,6 +4,8 @@ export class AreaResponseDto {
   areaId: number;
   name: string;
   description?: string;
+  leaderId?: number;
+  mentorId?: number;
   createdAt: string;  // ISO string for TIMESTAMP
   updatedAt: string;  // ISO string for TIMESTAMP
 
@@ -12,6 +14,8 @@ export class AreaResponseDto {
     dto.areaId = area.id!;
     dto.name = area.name.value;
     dto.description = area.description;
+    dto.leaderId = area.leaderId;
+    dto.mentorId = area.mentorId;
     dto.createdAt = area.createdAt!.toISOString();
     dto.updatedAt = area.updatedAt!.toISOString();
     return dto;

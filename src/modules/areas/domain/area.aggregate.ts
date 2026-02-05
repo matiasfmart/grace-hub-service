@@ -9,13 +9,16 @@ import { AreaCreatedEvent } from './events/area-created.event';
  * Business Rules:
  * - Must have a valid name
  * - Description is optional
- * - Can update name and description
+ * - Leader and Mentor are optional but recommended
+ * - Can update name, description, and leaders
  */
 export class Area extends AggregateRoot {
   private constructor(
     private readonly _id: number | undefined,
     private _name: AreaName,
     private _description?: string,
+    private _leaderId?: number,
+    private _mentorId?: number,
     private readonly _createdAt?: Date,
     private _updatedAt?: Date,
   ) {
@@ -25,11 +28,18 @@ export class Area extends AggregateRoot {
   /**
    * Factory method to create a new Area
    */
-  public static create(name: AreaName, description?: string): Area {
+  public static create(
+    name: AreaName,
+    description?: string,
+    leaderId?: number,
+    mentorId?: number,
+  ): Area {
     const area = new Area(
       undefined,
       name,
       description,
+      leaderId,
+      mentorId,
       new Date(),
       new Date(),
     );
@@ -46,10 +56,12 @@ export class Area extends AggregateRoot {
     id: number,
     name: AreaName,
     description: string | undefined,
+    leaderId: number | undefined,
+    mentorId: number | undefined,
     createdAt: Date,
     updatedAt: Date,
   ): Area {
-    return new Area(id, name, description, createdAt, updatedAt);
+    return new Area(id, name, description, leaderId, mentorId, createdAt, updatedAt);
   }
 
   /**
@@ -68,6 +80,15 @@ export class Area extends AggregateRoot {
     this._updatedAt = new Date();
   }
 
+  /**
+   * Business Logic: Assign leaders to the Area
+   */
+  public assignLeaders(leaderId?: number, mentorId?: number): void {
+    this._leaderId = leaderId;
+    this._mentorId = mentorId;
+    this._updatedAt = new Date();
+  }
+
   // Getters
   get id(): number | undefined {
     return this._id;
@@ -79,6 +100,14 @@ export class Area extends AggregateRoot {
 
   get description(): string | undefined {
     return this._description;
+  }
+
+  get leaderId(): number | undefined {
+    return this._leaderId;
+  }
+
+  get mentorId(): number | undefined {
+    return this._mentorId;
   }
 
   get createdAt(): Date | undefined {

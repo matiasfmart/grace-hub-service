@@ -17,6 +17,8 @@ import { GdiResponseDto } from '../dtos/gdi-response.dto';
 import { CreateGdiCommand } from '../../application/commands/create-gdi.command';
 import { UpdateGdiCommand } from '../../application/commands/update-gdi.command';
 import { DeleteGdiCommand } from '../../application/commands/delete-gdi.command';
+import { AssignMemberToGdiCommand } from '../../application/commands/assign-member-to-gdi.command';
+import { RemoveMemberFromGdiCommand } from '../../application/commands/remove-member-from-gdi.command';
 
 /**
  * Controller: GDIs
@@ -83,5 +85,52 @@ export class GdisController {
   async remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
     const command = new DeleteGdiCommand(id);
     await this.gdiApplicationService.deleteGdi(command);
+  }
+
+  // ============================================
+  // GDI Membership Endpoints
+  // ============================================
+
+  /**
+   * Get all member IDs assigned to a GDI
+   */
+  @Get(':id/members')
+  @HttpCode(HttpStatus.OK)
+  async getMembers(
+    @Param('id', ParseIntPipe) gdiId: number,
+  ): Promise<{ memberIds: number[] }> {
+    const memberIds = await this.gdiApplicationService.getGdiMembers(gdiId);
+    return { memberIds };
+  }
+
+  /**
+   * Assign a member to a GDI
+   * Note: If member is already in another GDI, they will be moved
+   */
+  @Post(':id/members/:memberId')
+  @HttpCode(HttpStatus.CREATED)
+  async assignMember(
+    @Param('id', ParseIntPipe) gdiId: number,
+    @Param('memberId', ParseIntPipe) memberId: number,
+  ): Promise<{ gdiId: number; memberId: number }> {
+    const command = new AssignMemberToGdiCommand(gdiId, memberId);
+    const membership = await this.gdiApplicationService.assignMemberToGdi(command);
+    return {
+      gdiId: membership.gdiId,
+      memberId: membership.memberId,
+    };
+  }
+
+  /**
+   * Remove a member from a GDI
+   */
+  @Delete(':id/members/:memberId')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async removeMember(
+    @Param('id', ParseIntPipe) gdiId: number,
+    @Param('memberId', ParseIntPipe) memberId: number,
+  ): Promise<void> {
+    const command = new RemoveMemberFromGdiCommand(gdiId, memberId);
+    await this.gdiApplicationService.removeMemberFromGdi(command);
   }
 }

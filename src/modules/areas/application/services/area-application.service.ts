@@ -4,10 +4,16 @@ import { GetAllAreasUseCase } from '../use-cases/get-area/get-all-areas.use-case
 import { GetAreaByIdUseCase } from '../use-cases/get-area/get-area-by-id.use-case';
 import { UpdateAreaUseCase } from '../use-cases/update-area/update-area.use-case';
 import { DeleteAreaUseCase } from '../use-cases/delete-area/delete-area.use-case';
+import { AssignMemberToAreaUseCase } from '../use-cases/area-membership/assign-member-to-area.use-case';
+import { RemoveMemberFromAreaUseCase } from '../use-cases/area-membership/remove-member-from-area.use-case';
+import { GetAreaMembersUseCase } from '../use-cases/area-membership/get-area-members.use-case';
 import { CreateAreaCommand } from '../commands/create-area.command';
 import { UpdateAreaCommand } from '../commands/update-area.command';
 import { DeleteAreaCommand } from '../commands/delete-area.command';
+import { AssignMemberToAreaCommand } from '../commands/assign-member-to-area.command';
+import { RemoveMemberFromAreaCommand } from '../commands/remove-member-from-area.command';
 import { Area } from '../../domain/area.aggregate';
+import { AreaMembership } from '../../domain/area-membership.aggregate';
 
 @Injectable()
 export class AreaApplicationService {
@@ -17,6 +23,9 @@ export class AreaApplicationService {
     private readonly getAreaByIdUseCase: GetAreaByIdUseCase,
     private readonly updateAreaUseCase: UpdateAreaUseCase,
     private readonly deleteAreaUseCase: DeleteAreaUseCase,
+    private readonly assignMemberToAreaUseCase: AssignMemberToAreaUseCase,
+    private readonly removeMemberFromAreaUseCase: RemoveMemberFromAreaUseCase,
+    private readonly getAreaMembersUseCase: GetAreaMembersUseCase,
   ) {}
 
   async createArea(command: CreateAreaCommand): Promise<Area> {
@@ -37,5 +46,21 @@ export class AreaApplicationService {
 
   async deleteArea(command: DeleteAreaCommand): Promise<void> {
     return await this.deleteAreaUseCase.execute(command);
+  }
+
+  // ============================================
+  // Area Membership Operations
+  // ============================================
+
+  async assignMemberToArea(command: AssignMemberToAreaCommand): Promise<AreaMembership> {
+    return await this.assignMemberToAreaUseCase.execute(command);
+  }
+
+  async removeMemberFromArea(command: RemoveMemberFromAreaCommand): Promise<void> {
+    return await this.removeMemberFromAreaUseCase.execute(command);
+  }
+
+  async getAreaMembers(areaId: number): Promise<number[]> {
+    return await this.getAreaMembersUseCase.execute(areaId);
   }
 }
