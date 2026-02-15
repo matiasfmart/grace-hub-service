@@ -8,7 +8,8 @@ import { AggregateRoot } from '../../../core/domain/base/aggregate-root';
  * - A member can belong to MULTIPLE Areas
  * - An Area can have multiple members
  * - Only ACTIVE members can be assigned to an Area
- * - Member must belong to a GDI to be assigned to an Area (validated at use case level)
+ *
+ * Note: Members without GDI can be assigned; UI shows a warning.
  */
 export class AreaMembership extends AggregateRoot {
   private constructor(

@@ -8,6 +8,9 @@ import { MemberStatusChangedEvent } from './events/member-status-changed.event';
 /**
  * Member Aggregate Root
  * Enforces all business rules and invariants
+ * 
+ * Note: GDI/Area assignments are managed by their respective aggregates.
+ * For read operations with assignments, use MemberWithAssignmentsReadModel.
  */
 export class Member extends AggregateRoot {
   private constructor(

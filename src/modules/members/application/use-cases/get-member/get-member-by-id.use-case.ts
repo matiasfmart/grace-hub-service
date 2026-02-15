@@ -3,11 +3,13 @@ import {
   IMemberRepository,
   MEMBER_REPOSITORY,
 } from '../../../domain/repositories/member.repository.interface';
-import { Member } from '../../../domain/member.aggregate';
+import { MemberWithAssignmentsReadModel } from '../../../domain/read-models/member-with-assignments.read-model';
 import { EntityNotFoundException } from '../../../../../core/domain/exceptions/domain.exception';
 
 /**
- * Use Case: Get Member by ID
+ * Use Case: Get Member by ID with Assignments
+ * Returns a member with their GDI, Areas, and Roles assignments
+ * Uses Read Model for optimized querying (CQRS pattern)
  */
 @Injectable()
 export class GetMemberByIdUseCase {
@@ -16,8 +18,8 @@ export class GetMemberByIdUseCase {
     private readonly memberRepository: IMemberRepository,
   ) {}
 
-  async execute(memberId: number): Promise<Member> {
-    const member = await this.memberRepository.findById(memberId);
+  async execute(memberId: number): Promise<MemberWithAssignmentsReadModel> {
+    const member = await this.memberRepository.findByIdWithAssignments(memberId);
 
     if (!member) {
       throw new EntityNotFoundException('Member', memberId);

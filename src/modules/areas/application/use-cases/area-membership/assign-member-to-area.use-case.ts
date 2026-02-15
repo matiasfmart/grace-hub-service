@@ -10,19 +10,17 @@ import {
 import { AreaMembership } from '../../../domain/area-membership.aggregate';
 import { AssignMemberToAreaCommand } from '../../commands/assign-member-to-area.command';
 import { BusinessRuleViolationException } from '../../../../../core/domain/exceptions/domain.exception';
-import {
-  IGdiMembershipRepository,
-  GDI_MEMBERSHIP_REPOSITORY,
-} from '../../../../gdis/domain/repositories/gdi-membership.repository.interface';
 
 /**
  * Use Case: Assign Member to Area
  *
  * Business Rules:
  * - Area must exist
- * - Member must belong to a GDI first (prerequisite)
  * - Member can belong to multiple areas
  * - Only ACTIVE members can be assigned (validated at controller/dto level)
+ *
+ * Note: Members without GDI can be assigned to areas, but the UI should
+ * show a warning indicating they should be assigned to a GDI first.
  */
 @Injectable()
 export class AssignMemberToAreaUseCase {
@@ -31,8 +29,6 @@ export class AssignMemberToAreaUseCase {
     private readonly membershipRepository: IAreaMembershipRepository,
     @Inject(AREA_REPOSITORY)
     private readonly areaRepository: IAreaRepository,
-    @Inject(GDI_MEMBERSHIP_REPOSITORY)
-    private readonly gdiMembershipRepository: IGdiMembershipRepository,
   ) {}
 
   async execute(command: AssignMemberToAreaCommand): Promise<AreaMembership> {
@@ -41,14 +37,6 @@ export class AssignMemberToAreaUseCase {
     if (!areaExists) {
       throw new BusinessRuleViolationException(
         `Area with ID ${command.areaId} does not exist`,
-      );
-    }
-
-    // Validate member belongs to a GDI (prerequisite)
-    const hasGdi = await this.gdiMembershipRepository.memberHasGdi(command.memberId);
-    if (!hasGdi) {
-      throw new BusinessRuleViolationException(
-        `Member ${command.memberId} must belong to a GDI before being assigned to an Area`,
       );
     }
 

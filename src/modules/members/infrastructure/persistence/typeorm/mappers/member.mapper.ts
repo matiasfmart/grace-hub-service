@@ -7,6 +7,9 @@ import { MemberStatus } from '../../../../../../core/common/constants/status.con
 /**
  * Mapper between Domain Aggregate and Infrastructure Entity
  * Maintains separation of concerns between layers
+ * 
+ * Note: Read Model mapping is done directly in the repository
+ * since it doesn't go through the aggregate.
  */
 export class MemberMapper {
   /**

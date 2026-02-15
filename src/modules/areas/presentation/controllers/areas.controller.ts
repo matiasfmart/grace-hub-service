@@ -97,7 +97,7 @@ export class AreasController {
 
   /**
    * Assign a member to an Area
-   * Note: Member must belong to a GDI first
+   * Note: Members without GDI can be assigned; UI shows a warning.
    */
   @Post(':id/members/:memberId')
   @HttpCode(HttpStatus.CREATED)
