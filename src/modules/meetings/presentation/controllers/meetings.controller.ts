@@ -6,14 +6,17 @@ import {
   Delete,
   Param,
   Body,
+  Query,
   HttpCode,
   HttpStatus,
   ParseIntPipe,
 } from '@nestjs/common';
 import { MeetingApplicationService } from '../../application/services/meeting-application.service';
+import { GetExpectedAttendeesUseCase } from '../../application/use-cases/get-expected-attendees/get-expected-attendees.use-case';
 import { CreateMeetingDto } from '../dtos/create-meeting.dto';
 import { UpdateMeetingDto } from '../dtos/update-meeting.dto';
 import { MeetingResponseDto } from '../dtos/meeting-response.dto';
+import { ExpectedAttendeeResponseDto } from '../dtos/expected-attendee-response.dto';
 import { CreateMeetingCommand } from '../../application/commands/create-meeting.command';
 import { UpdateMeetingCommand } from '../../application/commands/update-meeting.command';
 import { DeleteMeetingCommand } from '../../application/commands/delete-meeting.command';
@@ -22,15 +25,18 @@ import { DeleteMeetingCommand } from '../../application/commands/delete-meeting.
 export class MeetingsController {
   constructor(
     private readonly meetingApplicationService: MeetingApplicationService,
+    private readonly getExpectedAttendeesUseCase: GetExpectedAttendeesUseCase,
   ) {}
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async create(@Body() dto: CreateMeetingDto): Promise<MeetingResponseDto> {
     const command = new CreateMeetingCommand(
-      dto.seriesName,
+      dto.seriesId,
       new Date(dto.date),
-      dto.type,
+      dto.time,
+      dto.location,
+      dto.notes,
     );
     const meeting = await this.meetingApplicationService.createMeeting(command);
     return MeetingResponseDto.fromDomain(meeting);
@@ -38,8 +44,17 @@ export class MeetingsController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  async findAll(): Promise<MeetingResponseDto[]> {
-    const meetings = await this.meetingApplicationService.getAllMeetings();
+  async findAll(
+    @Query('seriesId') seriesId?: string,
+    @Query('startDate') startDate?: string,
+    @Query('endDate') endDate?: string,
+  ): Promise<MeetingResponseDto[]> {
+    const filters = {
+      seriesId: seriesId ? parseInt(seriesId, 10) : undefined,
+      startDate: startDate ? new Date(startDate) : undefined,
+      endDate: endDate ? new Date(endDate) : undefined,
+    };
+    const meetings = await this.meetingApplicationService.getAllMeetings(filters);
     return MeetingResponseDto.fromDomainArray(meetings);
   }
 
@@ -60,12 +75,27 @@ export class MeetingsController {
   ): Promise<MeetingResponseDto> {
     const command = new UpdateMeetingCommand(
       id,
-      dto.seriesName,
       dto.date ? new Date(dto.date) : undefined,
-      dto.type,
+      dto.time,
+      dto.location,
+      dto.notes,
     );
     const meeting = await this.meetingApplicationService.updateMeeting(command);
     return MeetingResponseDto.fromDomain(meeting);
+  }
+
+  /**
+   * Get expected attendees for a meeting
+   * Based on the meeting series' audienceType, returns the list of members
+   * who should attend this meeting.
+   */
+  @Get(':id/expected-attendees')
+  @HttpCode(HttpStatus.OK)
+  async getExpectedAttendees(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<ExpectedAttendeeResponseDto[]> {
+    const attendees = await this.getExpectedAttendeesUseCase.execute(id);
+    return ExpectedAttendeeResponseDto.fromDomainArray(attendees);
   }
 
   @Delete(':id')

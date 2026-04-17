@@ -1,14 +1,22 @@
-import { IsString, IsDateString, IsEnum, MaxLength } from 'class-validator';
-import { MeetingType } from '../../../../core/common/constants/status.constants';
+import { IsNumber, IsDateString, IsString, IsOptional, MaxLength } from 'class-validator';
 
 export class CreateMeetingDto {
-  @IsString()
-  @MaxLength(255)
-  seriesName: string;
+  @IsNumber()
+  seriesId: number;
 
   @IsDateString()
   date: string;
 
-  @IsEnum(MeetingType)
-  type: MeetingType;
+  @IsOptional()
+  @IsString()
+  time?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(255)
+  location?: string;
+
+  @IsOptional()
+  @IsString()
+  notes?: string;
 }

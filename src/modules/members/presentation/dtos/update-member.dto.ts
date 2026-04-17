@@ -1,5 +1,5 @@
 import { IsString, IsOptional, IsEnum, IsBoolean, IsDateString } from 'class-validator';
-import { MemberStatus } from '../../../../core/common/constants/status.constants';
+import { RecordStatus } from '../../../../core/common/constants/status.constants';
 
 /**
  * DTO for updating a member
@@ -19,8 +19,8 @@ export class UpdateMemberDto {
   contact?: string;
 
   @IsOptional()
-  @IsEnum(MemberStatus)
-  status?: MemberStatus;
+  @IsEnum(RecordStatus)
+  recordStatus?: RecordStatus;
 
   @IsOptional()
   @IsDateString()

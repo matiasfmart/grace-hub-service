@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
-import { MemberStatus } from '../../../../../core/common/constants/status.constants';
+import { RecordStatus } from '../../../../../core/common/constants/status.constants';
 import { DateTransformer } from '../../../../../core/infrastructure/transformers';
 
 @Entity('members')
@@ -17,12 +17,13 @@ export class MemberEntity {
   contact?: string;
 
   @Column({
-    name: 'status',
+    name: 'record_status',
     type: 'enum',
-    enum: MemberStatus,
-    default: MemberStatus.NEW,
+    enum: RecordStatus,
+    enumName: 'members_record_status_enum',
+    default: RecordStatus.VIGENTE,
   })
-  status: MemberStatus;
+  recordStatus: RecordStatus;
 
   @Column({ name: 'birth_date', type: 'date', nullable: true, transformer: DateTransformer })
   birthDate?: Date;

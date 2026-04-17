@@ -14,7 +14,7 @@ import {
   MemberFilterOptions,
   PaginatedMembersResult,
 } from '../../../domain/read-models/member-query.types';
-import { MemberStatus } from '../../../../../core/common/constants/status.constants';
+import { MemberStatus, RecordStatus } from '../../../../../core/common/constants/status.constants';
 import { BaseRepository } from '../../../../../core/database/postgresql/base.repository';
 import { MemberMapper } from './mappers/member.mapper';
 
@@ -26,7 +26,7 @@ interface MemberWithAssignmentsRaw {
   first_name: string;
   last_name: string;
   contact: string | null;
-  status: string;
+  record_status: string;
   birth_date: Date | null;
   baptism_date: Date | null;
   join_date: Date | null;
@@ -60,7 +60,7 @@ const MEMBER_WITH_ASSIGNMENTS_QUERY = `
     m.first_name,
     m.last_name,
     m.contact,
-    m.status,
+    m.record_status,
     m.birth_date,
     m.baptism_date,
     m.join_date,
@@ -142,9 +142,9 @@ export class MemberRepositoryImpl
     return MemberMapper.toDomainArray(entities);
   }
 
-  async findByStatus(status: MemberStatus): Promise<Member[]> {
+  async findByRecordStatus(recordStatus: RecordStatus): Promise<Member[]> {
     const entities = await this.memberRepository.find({
-      where: { status: status },
+      where: { recordStatus: recordStatus },
     });
     return MemberMapper.toDomainArray(entities);
   }
@@ -267,7 +267,7 @@ export class MemberRepositoryImpl
 
     // Status filter (cast enum to text for comparison)
     if (options.statusFilters && options.statusFilters.length > 0) {
-      conditions.push(`m.status::text = ANY($${paramIndex}::text[])`);
+      conditions.push(`m.record_status::text = ANY($${paramIndex}::text[])`);
       params.push(options.statusFilters);
       paramIndex++;
     }
@@ -411,7 +411,7 @@ export class MemberRepositoryImpl
       lastName: raw.last_name,
       fullName: `${raw.first_name} ${raw.last_name}`,
       contact: raw.contact ?? undefined,
-      status: raw.status,
+      recordStatus: raw.record_status,
       birthDate: raw.birth_date ?? undefined,
       baptismDate: raw.baptism_date ?? undefined,
       joinDate: raw.join_date ?? undefined,

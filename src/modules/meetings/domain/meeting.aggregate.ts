@@ -1,14 +1,20 @@
 import { AggregateRoot } from '../../../core/domain/base/aggregate-root';
-import { SeriesName } from './value-objects/series-name.vo';
 import { MeetingCreatedEvent } from './events/meeting-created.event';
-import { MeetingType } from '../../../core/common/constants/status.constants';
 
+/**
+ * Aggregate Root: Meeting (Instance)
+ *
+ * Represents a specific occurrence of a meeting from a series.
+ * Linked to a meeting_series via seriesId.
+ */
 export class Meeting extends AggregateRoot {
   private constructor(
     private readonly _id: number | undefined,
-    private _seriesName: SeriesName,
+    private _seriesId: number,
     private _date: Date,
-    private _type: MeetingType,
+    private _time: string | null,
+    private _location: string | null,
+    private _notes: string | null,
     private readonly _createdAt?: Date,
     private _updatedAt?: Date,
   ) {
@@ -16,15 +22,21 @@ export class Meeting extends AggregateRoot {
   }
 
   public static create(
-    seriesName: SeriesName,
+    seriesId: number,
     date: Date,
-    type: MeetingType,
+    options?: {
+      time?: string;
+      location?: string;
+      notes?: string;
+    },
   ): Meeting {
     const meeting = new Meeting(
       undefined,
-      seriesName,
+      seriesId,
       date,
-      type,
+      options?.time || null,
+      options?.location || null,
+      options?.notes || null,
       new Date(),
       new Date(),
     );
@@ -34,18 +46,15 @@ export class Meeting extends AggregateRoot {
 
   public static reconstitute(
     id: number,
-    seriesName: SeriesName,
+    seriesId: number,
     date: Date,
-    type: MeetingType,
+    time: string | null,
+    location: string | null,
+    notes: string | null,
     createdAt: Date,
     updatedAt: Date,
   ): Meeting {
-    return new Meeting(id, seriesName, date, type, createdAt, updatedAt);
-  }
-
-  public updateSeriesName(seriesName: SeriesName): void {
-    this._seriesName = seriesName;
-    this._updatedAt = new Date();
+    return new Meeting(id, seriesId, date, time, location, notes, createdAt, updatedAt);
   }
 
   public updateDate(date: Date): void {
@@ -53,20 +62,43 @@ export class Meeting extends AggregateRoot {
     this._updatedAt = new Date();
   }
 
+  public updateTime(time: string | null): void {
+    this._time = time;
+    this._updatedAt = new Date();
+  }
+
+  public updateLocation(location: string | null): void {
+    this._location = location;
+    this._updatedAt = new Date();
+  }
+
+  public updateNotes(notes: string | null): void {
+    this._notes = notes;
+    this._updatedAt = new Date();
+  }
+
   get id(): number | undefined {
     return this._id;
   }
 
-  get seriesName(): SeriesName {
-    return this._seriesName;
+  get seriesId(): number {
+    return this._seriesId;
   }
 
   get date(): Date {
     return this._date;
   }
 
-  get type(): MeetingType {
-    return this._type;
+  get time(): string | null {
+    return this._time;
+  }
+
+  get location(): string | null {
+    return this._location;
+  }
+
+  get notes(): string | null {
+    return this._notes;
   }
 
   get createdAt(): Date | undefined {

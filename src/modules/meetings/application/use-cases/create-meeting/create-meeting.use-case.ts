@@ -4,7 +4,6 @@ import {
   MEETING_REPOSITORY,
 } from '../../../domain/repositories/meeting.repository.interface';
 import { Meeting } from '../../../domain/meeting.aggregate';
-import { SeriesName } from '../../../domain/value-objects/series-name.vo';
 import { CreateMeetingCommand } from '../../commands/create-meeting.command';
 
 @Injectable()
@@ -15,8 +14,11 @@ export class CreateMeetingUseCase {
   ) {}
 
   async execute(command: CreateMeetingCommand): Promise<Meeting> {
-    const seriesName = SeriesName.create(command.seriesName);
-    const meeting = Meeting.create(seriesName, command.date, command.type);
+    const meeting = Meeting.create(command.seriesId, command.date, {
+      time: command.time,
+      location: command.location,
+      notes: command.notes,
+    });
     const savedMeeting = await this.meetingRepository.save(meeting);
     savedMeeting.clearEvents();
     return savedMeeting;

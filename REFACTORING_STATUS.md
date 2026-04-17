@@ -1,103 +1,79 @@
 # 🎯 Clean Architecture Refactoring - Status Report
 
-## ✅ COMPLETADO (100% de Módulos)
+> **Última actualización:** 2026-04-16
 
-### 📦 Módulos Refactorizados: 7/7 (100%)
+## ✅ Estado Actual
 
-1. **Members** ✅ - 19 archivos TypeScript
-2. **GDIs** ✅ - 20 archivos TypeScript
-3. **Areas** ✅ - 18 archivos TypeScript
-4. **Meetings** ✅ - 20 archivos TypeScript
-5. **Attendance** ✅ - 14 archivos TypeScript
-6. **Tithes** ✅ - 14 archivos TypeScript
-7. **Roles** ✅ - 14 archivos TypeScript
+### 📦 Módulos Implementados: 6/6 (100%)
 
-**Total: ~119 archivos TypeScript creados**
+| Módulo | Archivos | Estado |
+|--------|----------|--------|
+| **Members** | ~19 | ✅ Completo |
+| **GDIs** | ~20 | ✅ Completo |
+| **Areas** | ~18 | ✅ Completo |
+| **Meetings** | ~20 | ✅ Completo |
+| **Attendance** | ~14 | ✅ Completo |
+| **Tithes** | ~14 | ⚠️ Parcial (falta DELETE y filtro por memberId) |
+
+**Total: ~105 archivos TypeScript**
+
+> **Nota:** El módulo `Roles` fue planificado pero **NO está implementado**. 
+> Las tablas `role_types` y `member_roles` existen en BD pero no hay módulo NestJS.
 
 ### 🏗️ Arquitectura Implementada
 
 Cada módulo tiene la estructura completa de Clean Architecture:
 
-#### Domain Layer ✅
-- Aggregate Roots con lógica de negocio
-- Value Objects con validación
-- Domain Events
-- Repository Interfaces (Dependency Inversion)
-
-#### Infrastructure Layer ✅
-- TypeORM Entities  
-- Repository Implementations
-- Mappers (Anti-Corruption Layer)
-
-#### Application Layer ✅
-- Commands (inmutables)
-- Use Cases con @Inject(REPOSITORY)
-- Application Services (orchestrators)
-
-#### Presentation Layer ✅
-- DTOs con validaciones (class-validator)
-- Controllers (HTTP endpoints)
-- Response DTOs
-
-#### Module Configuration ✅
-- Dependency Inversion con Symbols
-- Providers configurados con DIP
-- Exports de Application Services
-
-### 🎨 Core Domain Classes ✅
-
-Creadas en `src/core/domain/`:
-
-- `base/aggregate-root.ts` - Base para Aggregates con Domain Events
-- `base/value-object.ts` - Base para Value Objects inmutables
-- `base/domain-event.ts` - Interface para eventos de dominio
-- `exceptions/domain.exception.ts` - Excepciones de dominio
-- `infrastructure/filters/domain-exception.filter.ts` - Filtro global
+```
+module/
+├── domain/
+│   ├── aggregates/     # Aggregate Roots con lógica de negocio
+│   ├── value-objects/  # Value Objects inmutables
+│   ├── events/         # Domain Events
+│   └── repositories/   # Repository Interfaces
+├── infrastructure/
+│   ├── entities/       # TypeORM Entities
+│   ├── repositories/   # Repository Implementations
+│   └── mappers/        # Entity ↔ Domain mappers
+├── application/
+│   ├── commands/       # Command objects (inmutables)
+│   ├── use-cases/      # Use Cases (@Inject)
+│   └── services/       # Application Services
+└── presentation/
+    ├── controllers/    # HTTP Controllers
+    └── dtos/           # Request/Response DTOs
+```
 
 ### 📊 Estado de Compilación
 
-- **Archivos creados:** ✅ 119/119 (100%)
-- **Módulos completos:** ✅ 7/7 (100%)
-- **Archivos obsoletos eliminados:** ✅
-- **Errores de compilación:** ⚠️ 57 (módulo resolution)
+- **Errores de compilación:** ✅ Resueltos
+- **Tests:** ⚠️ Pendientes
+
+---
 
 ## ⚠️ Pendiente
 
-### Errores de TypeScript (57)
+### Módulos por Implementar
 
-**Tipo de error:** `TS2307 - Cannot find module`
+| Módulo | Prioridad | Descripción |
+|--------|-----------|-------------|
+| **Roles** | Alta | CRUD para `role_types` y `member_roles` |
 
-Los errores son principalmente de resolución de módulos para:
-- `core/domain/base/aggregate-root`
-- `core/domain/base/value-object`
-- `core/domain/base/domain-event`
-- `core/domain/exceptions/domain.exception`
+### Mejoras en Módulos Existentes
 
-**Archivos afectados:**
-- Areas: domain files (5 errors)
-- Attendance: domain files (3 errors)
-- GDIs: domain files (5 errors)
-- Meetings: domain files (5 errors)
-- Members: domain files (5 errors)
-- Roles: domain files (5 errors)
-- Tithes: domain files (3 errors)
+| Módulo | Mejora | Prioridad |
+|--------|--------|-----------|
+| Tithes | Endpoint `DELETE /tithes/:id` | Media |
+| Tithes | Filtro `GET /tithes?memberId=:id` | Media |
+| Members | Validaciones de reglas de negocio | Baja |
 
-**Causa probable:**
-- Configuración de TypeScript/NestJS paths
-- Posible problema de resolución de módulos de NestJS CLI
+---
 
-**Solución sugerida:**
-1. Verificar `tsconfig.json` paths configuration
-2. Revisar nest-cli.json
-3. Posiblemente agregar paths mapping en tsconfig
+## 📚 Documentación Relacionada
 
-## 🎯 Logros Principales
-
-✅ **Arquitectura Limpia:** Todos los módulos siguen Clean Architecture estrictamente
-✅ **SOLID Principles:** Aplicados en todos los módulos
-✅ **Dependency Inversion:** Repository interfaces en Domain, implementations en Infrastructure
-✅ **Domain-Driven Design:** Aggregates, Value Objects, Domain Events
-✅ **Separation of Concerns:** Capas claramente separadas
+- [CLEAN_ARCHITECTURE.md](./docs/architecture/CLEAN_ARCHITECTURE.md) - Explicación de capas
+- [ARCHITECTURE_RULES.md](./docs/architecture/ARCHITECTURE_RULES.md) - Reglas por capa
+- [DEVELOPMENT_GUIDE.md](./docs/guides/DEVELOPMENT_GUIDE.md) - Guía de desarrollo
 ✅ **High Cohesion, Low Coupling:** Módulos independientes
 ✅ **Testability:** 100% inyección de dependencias
 ✅ **Scalability:** Arquitectura preparada para crecer

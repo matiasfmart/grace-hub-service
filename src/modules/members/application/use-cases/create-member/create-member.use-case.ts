@@ -7,7 +7,7 @@ import { Member } from '../../../domain/member.aggregate';
 import { MemberName } from '../../../domain/value-objects/member-name.vo';
 import { ContactInfo } from '../../../domain/value-objects/contact-info.vo';
 import { CreateMemberCommand } from '../../commands/create-member.command';
-import { MemberStatus } from '../../../../../core/common/constants/status.constants';
+import { RecordStatus } from '../../../../../core/common/constants/status.constants';
 
 /**
  * Use Case: Create a new Member
@@ -36,7 +36,7 @@ export class CreateMemberUseCase {
     const member = Member.create(
       name,
       contact,
-      command.status || MemberStatus.NEW,
+      command.recordStatus || RecordStatus.VIGENTE,
       command.birthDate,
       command.baptismDate,
       command.joinDate,

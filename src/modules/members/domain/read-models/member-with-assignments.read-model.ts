@@ -38,7 +38,7 @@ export interface MemberWithAssignmentsReadModel {
   readonly lastName: string;
   readonly fullName: string;
   readonly contact?: string;
-  readonly status: string;
+  readonly recordStatus: string;
   readonly birthDate?: Date;
   readonly baptismDate?: Date;
   readonly joinDate?: Date;

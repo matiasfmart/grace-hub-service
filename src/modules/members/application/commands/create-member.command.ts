@@ -1,4 +1,4 @@
-import { MemberStatus } from '../../../../core/common/constants/status.constants';
+import { RecordStatus } from '../../../../core/common/constants/status.constants';
 
 /**
  * Command for creating a new member
@@ -9,7 +9,7 @@ export class CreateMemberCommand {
     public readonly firstName: string,
     public readonly lastName: string,
     public readonly contact?: string,
-    public readonly status?: MemberStatus,
+    public readonly recordStatus?: RecordStatus,
     public readonly birthDate?: Date,
     public readonly baptismDate?: Date,
     public readonly joinDate?: Date,

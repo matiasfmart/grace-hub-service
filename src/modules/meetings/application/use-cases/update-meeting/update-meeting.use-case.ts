@@ -4,7 +4,6 @@ import {
   MEETING_REPOSITORY,
 } from '../../../domain/repositories/meeting.repository.interface';
 import { Meeting } from '../../../domain/meeting.aggregate';
-import { SeriesName } from '../../../domain/value-objects/series-name.vo';
 import { UpdateMeetingCommand } from '../../commands/update-meeting.command';
 import { EntityNotFoundException } from '../../../../../core/domain/exceptions/domain.exception';
 
@@ -21,13 +20,20 @@ export class UpdateMeetingUseCase {
       throw new EntityNotFoundException('Meeting', command.id);
     }
 
-    if (command.seriesName) {
-      const newSeriesName = SeriesName.create(command.seriesName);
-      meeting.updateSeriesName(newSeriesName);
-    }
-
     if (command.date) {
       meeting.updateDate(command.date);
+    }
+
+    if (command.time !== undefined) {
+      meeting.updateTime(command.time);
+    }
+
+    if (command.location !== undefined) {
+      meeting.updateLocation(command.location);
+    }
+
+    if (command.notes !== undefined) {
+      meeting.updateNotes(command.notes);
     }
 
     const updatedMeeting = await this.meetingRepository.save(meeting);

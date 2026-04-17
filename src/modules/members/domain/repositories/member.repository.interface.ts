@@ -1,5 +1,5 @@
 import { Member } from '../member.aggregate';
-import { MemberStatus } from '../../../../core/common/constants/status.constants';
+import { RecordStatus } from '../../../../core/common/constants/status.constants';
 import { MemberWithAssignmentsReadModel } from '../read-models/member-with-assignments.read-model';
 import { MemberFilterOptions, PaginatedMembersResult } from '../read-models/member-query.types';
 
@@ -12,7 +12,7 @@ export interface IMemberRepository {
   save(member: Member): Promise<Member>;
   findById(id: number): Promise<Member | null>;
   findAll(): Promise<Member[]>;
-  findByStatus(status: MemberStatus): Promise<Member[]>;
+  findByRecordStatus(recordStatus: RecordStatus): Promise<Member[]>;
   delete(id: number): Promise<void>;
   exists(id: number): Promise<boolean>;
 

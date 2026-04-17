@@ -1,6 +1,5 @@
 import { MemberWithAssignmentsReadModel, MemberRoleType as DomainMemberRoleType } from '../../domain/read-models/member-with-assignments.read-model';
 import { Member } from '../../domain/member.aggregate';
-import { MemberStatus } from '../../../../core/common/constants/status.constants';
 
 /**
  * DTO for assigned GDI info
@@ -67,7 +66,7 @@ export class MemberResponseDto {
     dto.lastName = readModel.lastName;
     dto.fullName = readModel.fullName;
     dto.contact = readModel.contact;
-    dto.status = readModel.status;
+    dto.status = readModel.recordStatus;
     dto.birthDate = this.toDateString(readModel.birthDate);
     dto.baptismDate = this.toDateString(readModel.baptismDate);
     dto.joinDate = this.toDateString(readModel.joinDate);
@@ -101,7 +100,7 @@ export class MemberResponseDto {
     dto.lastName = member.name.lastName;
     dto.fullName = member.name.fullName;
     dto.contact = member.contact?.value;
-    dto.status = member.status;
+    dto.status = member.recordStatus;
     dto.birthDate = this.toDateString(member.birthDate);
     dto.baptismDate = this.toDateString(member.baptismDate);
     dto.joinDate = this.toDateString(member.joinDate);

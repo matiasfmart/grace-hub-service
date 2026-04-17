@@ -1,9 +1,9 @@
-import { MeetingType } from '../../../../core/common/constants/status.constants';
-
 export class CreateMeetingCommand {
   constructor(
-    public readonly seriesName: string,
+    public readonly seriesId: number,
     public readonly date: Date,
-    public readonly type: MeetingType,
+    public readonly time?: string,
+    public readonly location?: string,
+    public readonly notes?: string,
   ) {}
 }

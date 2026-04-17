@@ -1,5 +1,5 @@
 import { IsString, IsOptional, IsEnum, IsBoolean, IsDateString } from 'class-validator';
-import { MemberStatus } from '../../../../core/common/constants/status.constants';
+import { RecordStatus } from '../../../../core/common/constants/status.constants';
 
 export class CreateMemberDto {
   @IsString()
@@ -12,9 +12,9 @@ export class CreateMemberDto {
   @IsString()
   contact?: string;
 
-  @IsEnum(MemberStatus)
+  @IsEnum(RecordStatus)
   @IsOptional()
-  status?: MemberStatus;
+  recordStatus?: RecordStatus;
 
   @IsOptional()
   @IsDateString()

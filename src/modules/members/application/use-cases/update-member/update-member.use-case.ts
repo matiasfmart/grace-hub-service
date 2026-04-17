@@ -47,9 +47,9 @@ export class UpdateMemberUseCase {
       member.updateContact(newContact);
     }
 
-    // Update status if provided
-    if (command.status) {
-      member.changeStatus(command.status);
+    // Update record status if provided
+    if (command.recordStatus) {
+      member.changeRecordStatus(command.recordStatus);
     }
 
     // Update birthDate if provided

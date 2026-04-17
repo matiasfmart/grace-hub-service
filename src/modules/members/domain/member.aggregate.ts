@@ -1,9 +1,9 @@
 import { AggregateRoot } from '../../../core/domain/base/aggregate-root';
-import { MemberStatus } from '../../../core/common/constants/status.constants';
+import { RecordStatus } from '../../../core/common/constants/status.constants';
 import { MemberName } from './value-objects/member-name.vo';
 import { ContactInfo } from './value-objects/contact-info.vo';
 import { MemberCreatedEvent } from './events/member-created.event';
-import { MemberStatusChangedEvent } from './events/member-status-changed.event';
+import { MemberRecordStatusChangedEvent } from './events/member-status-changed.event';
 
 /**
  * Member Aggregate Root
@@ -17,7 +17,7 @@ export class Member extends AggregateRoot {
     private readonly _id: number | undefined,
     private _name: MemberName,
     private _contact: ContactInfo | undefined,
-    private _status: MemberStatus,
+    private _recordStatus: RecordStatus,
     private _birthDate: Date | undefined,
     private _baptismDate: Date | undefined,
     private _joinDate: Date | undefined,
@@ -43,8 +43,8 @@ export class Member extends AggregateRoot {
     return this._contact;
   }
 
-  get status(): MemberStatus {
-    return this._status;
+  get recordStatus(): RecordStatus {
+    return this._recordStatus;
   }
 
   get birthDate(): Date | undefined {
@@ -83,7 +83,7 @@ export class Member extends AggregateRoot {
   public static create(
     name: MemberName,
     contact: ContactInfo | undefined,
-    status: MemberStatus = MemberStatus.NEW,
+    recordStatus: RecordStatus = RecordStatus.VIGENTE,
     birthDate?: Date,
     baptismDate?: Date,
     joinDate?: Date,
@@ -95,7 +95,7 @@ export class Member extends AggregateRoot {
       undefined, // id is undefined for new members
       name,
       contact,
-      status,
+      recordStatus,
       birthDate,
       baptismDate,
       joinDate,
@@ -117,7 +117,7 @@ export class Member extends AggregateRoot {
     id: number,
     name: MemberName,
     contact: ContactInfo | undefined,
-    status: MemberStatus,
+    recordStatus: RecordStatus,
     birthDate: Date | undefined,
     baptismDate: Date | undefined,
     joinDate: Date | undefined,
@@ -131,7 +131,7 @@ export class Member extends AggregateRoot {
       id,
       name,
       contact,
-      status,
+      recordStatus,
       birthDate,
       baptismDate,
       joinDate,
@@ -154,17 +154,17 @@ export class Member extends AggregateRoot {
     this.touch();
   }
 
-  public changeStatus(newStatus: MemberStatus): void {
-    if (this._status === newStatus) {
+  public changeRecordStatus(newStatus: RecordStatus): void {
+    if (this._recordStatus === newStatus) {
       return;
     }
 
-    const oldStatus = this._status;
-    this._status = newStatus;
+    const oldStatus = this._recordStatus;
+    this._recordStatus = newStatus;
     this.touch();
 
     // Raise domain event
-    this.addDomainEvent(new MemberStatusChangedEvent(this, oldStatus, newStatus));
+    this.addDomainEvent(new MemberRecordStatusChangedEvent(this, oldStatus, newStatus));
   }
 
   public markAsBaptized(baptismDate: Date | undefined): void {

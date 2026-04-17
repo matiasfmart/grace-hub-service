@@ -8,6 +8,7 @@ import { CreateMeetingCommand } from '../commands/create-meeting.command';
 import { UpdateMeetingCommand } from '../commands/update-meeting.command';
 import { DeleteMeetingCommand } from '../commands/delete-meeting.command';
 import { Meeting } from '../../domain/meeting.aggregate';
+import { MeetingFilters } from '../../domain/repositories/meeting.repository.interface';
 
 @Injectable()
 export class MeetingApplicationService {
@@ -23,8 +24,8 @@ export class MeetingApplicationService {
     return await this.createMeetingUseCase.execute(command);
   }
 
-  async getAllMeetings(): Promise<Meeting[]> {
-    return await this.getAllMeetingsUseCase.execute();
+  async getAllMeetings(filters?: MeetingFilters): Promise<Meeting[]> {
+    return await this.getAllMeetingsUseCase.execute(filters);
   }
 
   async getMeetingById(id: number): Promise<Meeting> {

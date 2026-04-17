@@ -19,6 +19,10 @@ import databaseConfig from '../config/database.config';
         entities: [__dirname + '/../../**/*.entity{.ts,.js}'],
         synchronize: configService.get<boolean>('database.synchronize'),
         logging: configService.get<boolean>('database.logging'),
+        extra: {
+          // Force IPv4 to avoid IPv6 connection issues with cloud databases
+          family: 4,
+        },
       }),
       inject: [ConfigService],
     }),

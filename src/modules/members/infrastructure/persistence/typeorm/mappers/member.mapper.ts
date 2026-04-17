@@ -2,7 +2,7 @@ import { Member } from '../../../../domain/member.aggregate';
 import { MemberEntity } from '../member.typeorm.entity';
 import { MemberName } from '../../../../domain/value-objects/member-name.vo';
 import { ContactInfo } from '../../../../domain/value-objects/contact-info.vo';
-import { MemberStatus } from '../../../../../../core/common/constants/status.constants';
+import { RecordStatus } from '../../../../../../core/common/constants/status.constants';
 
 /**
  * Mapper between Domain Aggregate and Infrastructure Entity
@@ -25,7 +25,7 @@ export class MemberMapper {
     entity.firstName = member.name.firstName;
     entity.lastName = member.name.lastName;
     entity.contact = member.contact?.value;
-    entity.status = member.status;
+    entity.recordStatus = member.recordStatus;
     entity.birthDate = member.birthDate;
     entity.baptismDate = member.baptismDate;
     entity.joinDate = member.joinDate;
@@ -49,7 +49,7 @@ export class MemberMapper {
       entity.memberId,
       name,
       contact,
-      entity.status as MemberStatus,
+      entity.recordStatus as RecordStatus,
       entity.birthDate ?? undefined,
       entity.baptismDate ?? undefined,
       entity.joinDate ?? undefined,

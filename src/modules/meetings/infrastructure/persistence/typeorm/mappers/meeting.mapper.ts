@@ -1,5 +1,4 @@
 import { Meeting } from '../../../../domain/meeting.aggregate';
-import { SeriesName } from '../../../../domain/value-objects/series-name.vo';
 import { MeetingEntity } from '../meeting.typeorm.entity';
 
 export class MeetingMapper {
@@ -8,9 +7,11 @@ export class MeetingMapper {
     if (domain.id) {
       entity.meetingId = domain.id;
     }
-    entity.seriesName = domain.seriesName.value;
+    entity.seriesId = domain.seriesId;
     entity.date = domain.date;
-    entity.type = domain.type;
+    entity.time = domain.time || undefined;
+    entity.location = domain.location || undefined;
+    entity.notes = domain.notes || undefined;
     if (domain.createdAt) {
       entity.createdAt = domain.createdAt;
     }
@@ -21,12 +22,13 @@ export class MeetingMapper {
   }
 
   public static toDomain(entity: MeetingEntity): Meeting {
-    const seriesName = SeriesName.create(entity.seriesName);
     return Meeting.reconstitute(
       entity.meetingId,
-      seriesName,
+      entity.seriesId,
       entity.date,
-      entity.type,
+      entity.time || null,
+      entity.location || null,
+      entity.notes || null,
       entity.createdAt,
       entity.updatedAt,
     );

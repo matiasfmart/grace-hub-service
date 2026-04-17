@@ -1,0 +1,68 @@
+-- ============================================================================
+-- Migración 009: Recrear member_roles y tithes con constraints correctos
+-- ============================================================================
+-- Fecha: 2026-04-16
+-- Descripción: Las migraciones 007 y 008 fallaron en eliminar los UNIQUE
+--              individuales. Esta migración usa DROP TABLE CASCADE + CREATE
+--              para garantizar los constraints correctos.
+-- ============================================================================
+
+-- EJECUTADO MANUALMENTE EN NEON (no como archivo de migración)
+-- Los comandos que se ejecutaron fueron:
+
+-- DROP TABLE IF EXISTS member_roles CASCADE;
+-- DROP TABLE IF EXISTS tithes CASCADE;
+
+-- CREATE TABLE member_roles (
+--     member_role_id SERIAL PRIMARY KEY,
+--     member_id INTEGER NOT NULL,
+--     role_type_id INTEGER NOT NULL,
+--     assigned_at TIMESTAMP DEFAULT now() NOT NULL,
+--     assigned_by INTEGER,
+--     CONSTRAINT uq_member_role UNIQUE(member_id, role_type_id)
+-- );
+-- ALTER TABLE member_roles ADD CONSTRAINT fk_member_role_member 
+--     FOREIGN KEY (member_id) REFERENCES members(member_id) ON DELETE CASCADE;
+-- ALTER TABLE member_roles ADD CONSTRAINT fk_member_role_role_type 
+--     FOREIGN KEY (role_type_id) REFERENCES role_types(role_type_id) ON DELETE CASCADE;
+-- CREATE INDEX idx_member_roles_member ON member_roles(member_id);
+-- CREATE INDEX idx_member_roles_role_type ON member_roles(role_type_id);
+
+-- CREATE TABLE tithes (
+--     tithe_id SERIAL PRIMARY KEY,
+--     member_id INTEGER NOT NULL,
+--     year INTEGER NOT NULL,
+--     month INTEGER NOT NULL,
+--     created_at TIMESTAMP DEFAULT now() NOT NULL,
+--     updated_at TIMESTAMP DEFAULT now() NOT NULL,
+--     CONSTRAINT uq_tithe_member_year_month UNIQUE(member_id, year, month)
+-- );
+-- ALTER TABLE tithes ADD CONSTRAINT fk_tithe_member 
+--     FOREIGN KEY (member_id) REFERENCES members(member_id) ON DELETE CASCADE;
+-- CREATE INDEX idx_tithes_member ON tithes(member_id);
+-- CREATE INDEX idx_tithes_year_month ON tithes(year, month);
+
+-- ============================================================================
+-- VERIFICACIÓN (2026-04-16):
+-- ============================================================================
+-- SELECT conname, contype, pg_get_constraintdef(oid) 
+-- FROM pg_constraint WHERE conrelid = 'member_roles'::regclass;
+--
+-- Resultado:
+-- | conname                  | contype | definition                                    |
+-- |--------------------------|---------|-----------------------------------------------|
+-- | member_roles_pkey        | p       | PRIMARY KEY (member_role_id)                  |
+-- | uq_member_role           | u       | UNIQUE (member_id, role_type_id)              |
+-- | fk_member_role_member    | f       | FOREIGN KEY ... ON DELETE CASCADE             |
+-- | fk_member_role_role_type | f       | FOREIGN KEY ... ON DELETE CASCADE             |
+--
+-- SELECT conname, contype, pg_get_constraintdef(oid) 
+-- FROM pg_constraint WHERE conrelid = 'tithes'::regclass;
+--
+-- Resultado:
+-- | conname                  | contype | definition                                    |
+-- |--------------------------|---------|-----------------------------------------------|
+-- | tithes_pkey              | p       | PRIMARY KEY (tithe_id)                        |
+-- | uq_tithe_member_year_month| u      | UNIQUE (member_id, year, month)               |
+-- | fk_tithe_member          | f       | FOREIGN KEY ... ON DELETE CASCADE             |
+-- ============================================================================
