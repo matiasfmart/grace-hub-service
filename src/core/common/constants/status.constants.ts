@@ -48,22 +48,21 @@ export enum WeekOrdinal {
 /**
  * Audience type for meeting series
  * Determines who should attend the meeting
+ * 
+ * See ADR-004 (Clasificación de Miembros) and ADR-005 (Tipos de Audiencia)
  */
 export enum AudienceType {
+  // Por grupo específico
   GDI = 'gdi',
   AREA = 'area',
-  BY_CATEGORIES = 'by_categories',
-  ALL_ACTIVE = 'all_active',
-}
-
-/**
- * Attendee category codes (matches attendee_categories.code in DB)
- * Used to determine expected attendees for general meetings
- */
-export enum AttendeeCategory {
-  AREA_LEADER = 'area_leader',
-  AREA_MEMBER = 'area_member',
-  GDI_GUIDE = 'gdi_guide',
-  GDI_MEMBER = 'gdi_member',
-  MENTOR = 'mentor',
+  
+  // Generales predefinidos (por nivel operativo - ADR-004)
+  ALL_ACTIVE = 'all_active',       // Todos los miembros vigentes
+  INTEGRATED = 'integrated',       // Nivel >= 1 (tiene GDI o sirve)
+  WORKERS = 'workers',             // Nivel >= 2 (obreros, incluye líderes)
+  LEADERS = 'leaders',             // Nivel >= 3 (líderes, incluye mentores)
+  MENTORS = 'mentors',             // Nivel = 4 (solo mentores)
+  
+  // Personalizado (por etiquetas eclesiásticas - ADR-003/005)
+  BY_CATEGORIES = 'by_categories', // Usa audience_config para config
 }

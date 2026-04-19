@@ -5,7 +5,9 @@ import { TitheApplicationService } from './application/services/tithe-applicatio
 import { CreateTitheUseCase } from './application/use-cases/create-tithe/create-tithe.use-case';
 import { GetAllTithesUseCase } from './application/use-cases/get-tithe/get-all-tithes.use-case';
 import { GetTithesByYearMonthUseCase } from './application/use-cases/get-tithe/get-tithes-by-year-month.use-case';
+import { GetTithesByMemberUseCase } from './application/use-cases/get-tithe/get-tithes-by-member.use-case';
 import { BatchUpsertTithesUseCase } from './application/use-cases/batch-upsert-tithes/batch-upsert-tithes.use-case';
+import { DeleteTitheUseCase } from './application/use-cases/delete-tithe/delete-tithe.use-case';
 import { TitheEntity } from './infrastructure/persistence/typeorm/tithe.typeorm.entity';
 import { TitheRepositoryImpl } from './infrastructure/persistence/typeorm/tithe.repository.impl';
 import { TITHE_REPOSITORY } from './domain/repositories/tithe.repository.interface';
@@ -18,7 +20,9 @@ import { TITHE_REPOSITORY } from './domain/repositories/tithe.repository.interfa
     CreateTitheUseCase,
     GetAllTithesUseCase,
     GetTithesByYearMonthUseCase,
+    GetTithesByMemberUseCase,
     BatchUpsertTithesUseCase,
+    DeleteTitheUseCase,
     {
       provide: TITHE_REPOSITORY,
       useClass: TitheRepositoryImpl,

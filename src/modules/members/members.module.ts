@@ -20,6 +20,11 @@ import { MemberRepositoryImpl } from './infrastructure/persistence/typeorm/membe
 // Domain Layer
 import { MEMBER_REPOSITORY } from './domain/repositories/member.repository.interface';
 
+// Roles Module (for assignment use cases)
+import { RolesModule } from '../roles/roles.module';
+import { AssignRoleTypeToMemberUseCase } from '../roles/application/use-cases/assign-role-type-to-member/assign-role-type-to-member.use-case';
+import { RemoveRoleTypeFromMemberUseCase } from '../roles/application/use-cases/remove-role-type-from-member/remove-role-type-from-member.use-case';
+
 /**
  * Members Module following Clean Architecture
  *
@@ -33,7 +38,7 @@ import { MEMBER_REPOSITORY } from './domain/repositories/member.repository.inter
  * 3. Separation of Concerns: Clear boundaries between layers
  */
 @Module({
-  imports: [TypeOrmModule.forFeature([MemberEntity])],
+  imports: [TypeOrmModule.forFeature([MemberEntity]), RolesModule],
 
   controllers: [MembersController],
 
@@ -48,6 +53,8 @@ import { MEMBER_REPOSITORY } from './domain/repositories/member.repository.inter
     GetMembersFilteredUseCase,
     UpdateMemberUseCase,
     DeleteMemberUseCase,
+    AssignRoleTypeToMemberUseCase,
+    RemoveRoleTypeFromMemberUseCase,
 
     // Repository Implementation (bound to domain interface)
     {

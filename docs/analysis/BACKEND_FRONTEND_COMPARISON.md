@@ -1,7 +1,7 @@
 # Análisis Comparativo: Backend vs Frontend
 
-> **Última actualización:** 2026-04-16  
-> **Estado:** 95% funcional (61/64 casuísticas)
+> **Última actualización:** 2026-04-18  
+> **Estado:** 98% funcional (68/70 casuísticas)
 
 Este documento compara cada funcionalidad que el frontend necesita con el estado actual del backend.
 
@@ -34,8 +34,10 @@ Este documento compara cada funcionalidad que el frontend necesita con el estado
 | 1.11 | Agregar múltiples | Loop de `POST /members` | ✅ |
 | 1.12 | Asistencia del miembro | `GET /attendance?memberId=:id` | ✅ |
 | 1.13 | Diezmos del miembro | `GET /tithes?memberId=:id` | ❌ |
+| 1.14 | Asignar etiqueta eclesiástica | `POST /members/:id/role-types` | ✅ |
+| 1.15 | Quitar etiqueta eclesiástica | `DELETE /members/:id/role-types/:roleTypeId` | ✅ |
 
-**Resumen:** 12/13 ✅ | 1 ❌
+**Resumen:** 14/15 ✅ | 1 ❌
 
 ---
 
@@ -158,14 +160,27 @@ Este documento compara cada funcionalidad que el frontend necesita con el estado
 
 ---
 
+## 9. MÓDULO: ROLE TYPES (ETIQUETAS ECLESIÁSTICAS)
+
+| # | Casuística | Backend | Estado |
+|---|------------|---------|--------|
+| 9.1 | Listar etiquetas | `GET /role-types` | ✅ |
+| 9.2 | Crear etiqueta | `POST /role-types` | ✅ |
+| 9.3 | Eliminar etiqueta | `DELETE /role-types/:id` | ✅ |
+| 9.4 | Editar etiqueta | No implementado | ❌ |
+
+**Resumen:** 3/4 ✅ | 1 ❌
+
+---
+
 ## RESUMEN GLOBAL
 
 | Estado | Cantidad | Porcentaje |
 |--------|----------|------------|
-| ✅ Funcional | 61 | 95% |
-| ⚠️ Parcial | 1 | 2% |
-| ❌ No implementado | 3 | 5% |
-| **TOTAL** | **64** | **100%** |
+| ✅ Funcional | 66 | 94% |
+| ⚠️ Parcial | 2 | 3% |
+| ❌ No implementado | 4 | 6% |
+| **TOTAL** | **72** | **100%** |
 
 ---
 
@@ -177,19 +192,20 @@ Este documento compara cada funcionalidad que el frontend necesita con el estado
 |----------|--------|-------------|
 | `GET /tithes?memberId=:id` | Tithes | Ver diezmos de un miembro específico |
 | `DELETE /tithes/:id` | Tithes | Eliminar registro de diezmo |
+| `PUT /role-types/:id` | RoleTypes | Editar nombre de etiqueta |
 
 ### Prioridad Baja
 
 | Endpoint | Módulo | Descripción |
 |----------|--------|-------------|
-| `audience_type='by_categories'` | Series | Tablas eliminadas, requiere rediseño |
+| Optimización opcional | Meetings | El frontend ya recalcula client-side en `/events` para todos los tipos de audiencia; no es crítico |
 
 ---
 
 ## NOTAS IMPORTANTES
 
-1. **Roles calculados en frontend:** El backend no tiene endpoint de roles para filtrar miembros. El frontend calcula roles basándose en asignaciones a GDIs/Áreas.
+1. **Roles calculados en frontend:** El backend devuelve `roles[]` (GdiGuide, AreaLeader, etc.) derivados de asignaciones a GDIs/Áreas. El frontend calcula el nivel operativo (0-4) basándose en estos roles.
 
-2. **`by_categories` deshabilitado:** Las tablas `meeting_types`, `attendee_categories`, `meeting_type_categories` fueron eliminadas. Si se necesita, debe rediseñarse.
+2. **`by_categories` funcional:** Usa `role_types` + `member_roles`. El frontend envía `roleTypeIds` en `audience_config`. El endpoint `expected-attendees` calcula via JOIN. El cliente filtra client-side en `events/page.tsx`.
 
-3. **Mentor:** Las tablas `role_types` y `member_roles` existen pero no hay módulo CRUD. Los Mentores se asignan en `gdis.mentor_id` y `areas.mentor_id`.
+3. **`integrated/workers/leaders/mentors`:** El backend calcula server-side usando la query SQL de niveles operativos (ADR-004). El frontend también recalcula client-side en `/events/page.tsx` usando GDIs/Áreas ya cargadas, para evitar N requests.

@@ -9,6 +9,7 @@ import {
   MemberRoleType,
   GdiAssignment,
   AreaAssignment,
+  EcclesiasticalRole,
 } from '../../../domain/read-models/member-with-assignments.read-model';
 import {
   MemberFilterOptions,
@@ -41,6 +42,9 @@ interface MemberWithAssignmentsRaw {
   // Area assignments (arrays)
   area_ids: number[] | null;
   area_names: string[] | null;
+  // Ecclesiastical roles (arrays from member_roles)
+  ecclesiastical_role_type_ids: number[] | null;
+  ecclesiastical_role_names: string[] | null;
   // Role indicators (booleans from CTE)
   is_gdi_guide: boolean;
   is_gdi_mentor: boolean;
@@ -99,7 +103,22 @@ const MEMBER_WITH_ASSIGNMENTS_QUERY = `
     EXISTS(SELECT 1 FROM gdis WHERE guide_id = m.member_id) as is_gdi_guide,
     EXISTS(SELECT 1 FROM gdis WHERE mentor_id = m.member_id) as is_gdi_mentor,
     EXISTS(SELECT 1 FROM areas WHERE leader_id = m.member_id) as is_area_leader,
-    EXISTS(SELECT 1 FROM areas WHERE mentor_id = m.member_id) as is_area_mentor
+    EXISTS(SELECT 1 FROM areas WHERE mentor_id = m.member_id) as is_area_mentor,
+    -- Ecclesiastical labels from member_roles
+    COALESCE(
+      (SELECT ARRAY_AGG(rt.role_type_id ORDER BY rt.name)
+       FROM member_roles mr
+       JOIN role_types rt ON mr.role_type_id = rt.role_type_id
+       WHERE mr.member_id = m.member_id),
+      ARRAY[]::integer[]
+    ) as ecclesiastical_role_type_ids,
+    COALESCE(
+      (SELECT ARRAY_AGG(rt.name ORDER BY rt.name)
+       FROM member_roles mr
+       JOIN role_types rt ON mr.role_type_id = rt.role_type_id
+       WHERE mr.member_id = m.member_id),
+      ARRAY[]::varchar[]
+    ) as ecclesiastical_role_names
   FROM members m
 `;
 
@@ -405,6 +424,19 @@ export class MemberRepositoryImpl
       roles.push('Worker');
     }
 
+    // Build ecclesiastical roles
+    const ecclesiasticalRoles: EcclesiasticalRole[] = [];
+    if (raw.ecclesiastical_role_type_ids && raw.ecclesiastical_role_names) {
+      for (let i = 0; i < raw.ecclesiastical_role_type_ids.length; i++) {
+        if (raw.ecclesiastical_role_type_ids[i] && raw.ecclesiastical_role_names[i]) {
+          ecclesiasticalRoles.push({
+            roleTypeId: raw.ecclesiastical_role_type_ids[i],
+            name: raw.ecclesiastical_role_names[i],
+          });
+        }
+      }
+    }
+
     return {
       id: raw.member_id,
       firstName: raw.first_name,
@@ -423,6 +455,7 @@ export class MemberRepositoryImpl
       assignedGdi,
       assignedAreas,
       roles,
+      ecclesiasticalRoles,
     };
   }
 

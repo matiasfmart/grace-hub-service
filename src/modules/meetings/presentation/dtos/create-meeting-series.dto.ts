@@ -8,8 +8,10 @@ import {
   IsNumber,
   Min,
   Max,
+  IsObject,
 } from 'class-validator';
 import { MeetingFrequency, AudienceType, DayOfWeek, MonthlyRuleType, WeekOrdinal } from '../../../../core/common/constants/status.constants';
+import { AudienceConfig } from '../../domain/services/expected-attendees.query-service.interface';
 
 export class CreateMeetingSeriesDto {
   @IsString()
@@ -37,6 +39,14 @@ export class CreateMeetingSeriesDto {
   @IsOptional()
   @IsNumber()
   meetingTypeId?: number;
+
+  /**
+   * Configuration for BY_CATEGORIES audience type
+   * Structure: { roleTypeIds?: number[], labels?: string[], combineMode?: 'OR' | 'AND' }
+   */
+  @IsOptional()
+  @IsObject()
+  audienceConfig?: AudienceConfig;
 
   // Optional fields
   @IsOptional()

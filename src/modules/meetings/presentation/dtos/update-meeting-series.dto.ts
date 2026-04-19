@@ -3,7 +3,29 @@ import {
   IsDateString,
   MaxLength,
   IsOptional,
+  IsEnum,
+  ValidateNested,
+  IsArray,
+  IsNumber,
 } from 'class-validator';
+import { Type } from 'class-transformer';
+import { AudienceType } from '../../../../core/common/constants/status.constants';
+
+class AudienceConfigDto {
+  @IsOptional()
+  @IsArray()
+  @IsNumber({}, { each: true })
+  roleTypeIds?: number[];
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  labels?: string[];
+
+  @IsOptional()
+  @IsEnum(['OR', 'AND'])
+  combineMode?: 'OR' | 'AND';
+}
 
 export class UpdateMeetingSeriesDto {
   @IsOptional()
@@ -27,4 +49,13 @@ export class UpdateMeetingSeriesDto {
   @IsOptional()
   @IsDateString()
   endDate?: string;
+
+  @IsOptional()
+  @IsEnum(AudienceType)
+  audienceType?: AudienceType;
+
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => AudienceConfigDto)
+  audienceConfig?: AudienceConfigDto;
 }

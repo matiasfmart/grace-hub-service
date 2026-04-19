@@ -48,7 +48,7 @@ export class GetExpectedAttendeesUseCase {
       series.audienceType,
       series.gdiId,
       series.areaId,
-      series.meetingTypeId,
+      series.audienceConfig,
     );
   }
 }

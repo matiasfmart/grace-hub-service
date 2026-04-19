@@ -1,8 +1,10 @@
 import {
   Controller,
+  Delete,
   Get,
   Post,
   Body,
+  Param,
   Query,
   HttpCode,
   HttpStatus,
@@ -37,7 +39,16 @@ export class TithesController {
   async findAll(
     @Query('year') year?: string,
     @Query('month') month?: string,
+    @Query('memberId') memberId?: string,
   ): Promise<TitheResponseDto[]> {
+    // Filter by memberId if provided
+    if (memberId) {
+      const tithes = await this.titheApplicationService.getTithesByMember(
+        parseInt(memberId, 10),
+      );
+      return TitheResponseDto.fromDomainArray(tithes);
+    }
+
     // If both year and month are provided, filter by them
     if (year && month) {
       const tithes = await this.titheApplicationService.getTithesByYearAndMonth(
@@ -50,6 +61,12 @@ export class TithesController {
     // Otherwise return all
     const tithes = await this.titheApplicationService.getAllTithes();
     return TitheResponseDto.fromDomainArray(tithes);
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    await this.titheApplicationService.deleteTithe(id);
   }
 
   @Post('batch')

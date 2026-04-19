@@ -2,6 +2,7 @@ import { MeetingSeries } from '../../../../domain/meeting-series.aggregate';
 import { SeriesName } from '../../../../domain/value-objects/series-name.vo';
 import { MeetingSeriesEntity } from '../meeting-series.typeorm.entity';
 import { DayOfWeek } from '../../../../../../core/common/constants/status.constants';
+import { AudienceConfig } from '../../../../domain/services/expected-attendees.query-service.interface';
 
 export class MeetingSeriesMapper {
   public static toPersistence(domain: MeetingSeries): MeetingSeriesEntity {
@@ -15,6 +16,7 @@ export class MeetingSeriesMapper {
     entity.gdiId = domain.gdiId || undefined;
     entity.areaId = domain.areaId || undefined;
     entity.meetingTypeId = domain.meetingTypeId || undefined;
+    entity.audienceConfig = domain.audienceConfig || undefined;
     entity.frequency = domain.frequency;
     entity.startDate = domain.startDate;
     entity.endDate = domain.endDate || undefined;
@@ -50,6 +52,7 @@ export class MeetingSeriesMapper {
       entity.gdiId || null,
       entity.areaId || null,
       entity.meetingTypeId || null,
+      (entity.audienceConfig as AudienceConfig) || null,
       entity.frequency,
       entity.startDate,
       entity.endDate || null,

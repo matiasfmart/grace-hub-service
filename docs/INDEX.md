@@ -1,6 +1,6 @@
 # Grace Hub Service - Documentación
 
-> **Última actualización:** 2026-04-16
+> **Última actualización:** 2026-04-18
 
 ## Índice
 
@@ -13,7 +13,7 @@
 - [MEETINGS_ARCHITECTURE.md](./architecture/MEETINGS_ARCHITECTURE.md) - Arquitectura del módulo de reuniones
 
 ### Análisis
-- [BACKEND_FRONTEND_COMPARISON.md](./analysis/BACKEND_FRONTEND_COMPARISON.md) - Estado de endpoints vs frontend (95%)
+- [BACKEND_FRONTEND_COMPARISON.md](./analysis/BACKEND_FRONTEND_COMPARISON.md) - Estado de endpoints vs frontend (98%)
 
 ### Guías
 - [DEVELOPMENT_GUIDE.md](./guides/DEVELOPMENT_GUIDE.md) - Guía de desarrollo
@@ -51,9 +51,10 @@ Para documentación funcional y de negocio, ver:
 | Meeting Series | `/meeting-series` | ✅ Completo |
 | Attendance | `/attendance` | ✅ Completo |
 | Tithes | `/tithes` | ⚠️ Parcial |
+| Role Types | `/role-types` | ✅ Completo |
 
 ### Módulos Pendientes
 
 | Módulo | Descripción | Prioridad |
-|--------|-------------|-----------|
-| Roles | CRUD para `role_types` y `member_roles` | Media |
+|--------|-------------|----------|
+| RoleTypes edit | `PUT /role-types/:id` - Editar etiqueta | Baja |

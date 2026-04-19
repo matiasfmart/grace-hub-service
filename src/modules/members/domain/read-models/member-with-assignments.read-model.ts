@@ -24,6 +24,14 @@ export interface AreaAssignment {
 }
 
 /**
+ * Ecclesiastical label (from role_types / member_roles)
+ */
+export interface EcclesiasticalRole {
+  readonly roleTypeId: number;
+  readonly name: string;
+}
+
+/**
  * Member role types based on positions in GDIs and Areas
  */
 export type MemberRoleType = 'GdiGuide' | 'GdiMentor' | 'AreaLeader' | 'AreaMentor' | 'Worker';
@@ -52,4 +60,5 @@ export interface MemberWithAssignmentsReadModel {
   readonly assignedGdi?: GdiAssignment;
   readonly assignedAreas: AreaAssignment[];
   readonly roles: MemberRoleType[];
+  readonly ecclesiasticalRoles: EcclesiasticalRole[];
 }

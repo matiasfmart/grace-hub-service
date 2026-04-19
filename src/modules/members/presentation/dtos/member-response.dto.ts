@@ -1,4 +1,4 @@
-import { MemberWithAssignmentsReadModel, MemberRoleType as DomainMemberRoleType } from '../../domain/read-models/member-with-assignments.read-model';
+import { MemberWithAssignmentsReadModel, MemberRoleType as DomainMemberRoleType, EcclesiasticalRole as DomainEcclesiasticalRole } from '../../domain/read-models/member-with-assignments.read-model';
 import { Member } from '../../domain/member.aggregate';
 
 /**
@@ -21,6 +21,11 @@ export class AssignedAreaDto {
  * Member role types based on positions
  */
 export type MemberRoleType = DomainMemberRoleType;
+
+/**
+ * Ecclesiastical label (from role_types)
+ */
+export type EcclesiasticalRoleDto = DomainEcclesiasticalRole;
 
 /**
  * Response DTO for Member
@@ -46,6 +51,7 @@ export class MemberResponseDto {
   assignedGdi?: AssignedGdiDto;
   assignedAreas: AssignedAreaDto[];
   roles: MemberRoleType[];
+  ecclesiasticalRoles: EcclesiasticalRoleDto[];
 
   /**
    * Formats a Date to YYYY-MM-DD string for DATE columns
@@ -85,6 +91,10 @@ export class MemberResponseDto {
       name: area.name,
     }));
     dto.roles = readModel.roles;
+    dto.ecclesiasticalRoles = readModel.ecclesiasticalRoles.map((er) => ({
+      roleTypeId: er.roleTypeId,
+      name: er.name,
+    }));
 
     return dto;
   }
@@ -114,6 +124,7 @@ export class MemberResponseDto {
     dto.assignedGdi = undefined;
     dto.assignedAreas = [];
     dto.roles = [];
+    dto.ecclesiasticalRoles = [];
 
     return dto;
   }

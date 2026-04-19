@@ -1,4 +1,5 @@
 import { MeetingFrequency, AudienceType, DayOfWeek, MonthlyRuleType, WeekOrdinal } from '../../../../core/common/constants/status.constants';
+import { AudienceConfig } from '../../domain/services/expected-attendees.query-service.interface';
 
 export class CreateMeetingSeriesCommand {
   constructor(
@@ -10,6 +11,7 @@ export class CreateMeetingSeriesCommand {
     public readonly gdiId?: number,
     public readonly areaId?: number,
     public readonly meetingTypeId?: number,
+    public readonly audienceConfig?: AudienceConfig,
     // Optional fields
     public readonly endDate?: Date,
     public readonly defaultTime?: string,

@@ -73,11 +73,11 @@ export class CreateMeetingSeriesUseCase {
         break;
 
       case AudienceType.BY_CATEGORIES:
-        if (!command.meetingTypeId) {
-          throw new BadRequestException('meetingTypeId is required for BY_CATEGORIES audience type');
+        if (!command.audienceConfig) {
+          throw new BadRequestException('audienceConfig is required for BY_CATEGORIES audience type');
         }
         series = MeetingSeries.createByCategories(
-          command.meetingTypeId,
+          command.audienceConfig,
           name,
           command.frequency,
           command.startDate,
@@ -86,12 +86,44 @@ export class CreateMeetingSeriesUseCase {
         break;
 
       case AudienceType.ALL_ACTIVE:
+      case AudienceType.INTEGRATED:
+      case AudienceType.WORKERS:
+      case AudienceType.LEADERS:
+      case AudienceType.MENTORS:
         series = MeetingSeries.createForAllActive(
           name,
           command.frequency,
           command.startDate,
           options,
         );
+        // Override the audienceType since createForAllActive defaults to ALL_ACTIVE
+        // We need a more generic factory method, but for now we can use reconstitute
+        if (command.audienceType !== AudienceType.ALL_ACTIVE) {
+          series = MeetingSeries.reconstitute(
+            0, // Will be assigned by DB
+            name,
+            options.description || null,
+            command.audienceType,
+            null,
+            null,
+            null,
+            null,
+            command.frequency,
+            command.startDate,
+            options.endDate || null,
+            options.defaultTime || null,
+            options.defaultLocation || null,
+            options.oneTimeDate || null,
+            options.weeklyDays || null,
+            options.monthlyRuleType || null,
+            options.monthlyDayOfMonth || null,
+            options.monthlyWeekOrdinal || null,
+            options.monthlyDayOfWeek || null,
+            new Date(),
+            new Date(),
+            [],
+          );
+        }
         break;
 
       default:

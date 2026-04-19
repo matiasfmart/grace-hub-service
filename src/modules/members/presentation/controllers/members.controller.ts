@@ -21,6 +21,9 @@ import { CreateMemberCommand } from '../../application/commands/create-member.co
 import { UpdateMemberCommand } from '../../application/commands/update-member.command';
 import { DeleteMemberCommand } from '../../application/commands/delete-member.command';
 import { GetMembersFilteredOptions } from '../../application/use-cases/get-members-filtered/get-members-filtered.options';
+import { AssignRoleTypeDto } from '../../../roles/presentation/dtos/assign-role-type.dto';
+import { AssignRoleTypeToMemberCommand } from '../../../roles/application/use-cases/assign-role-type-to-member/assign-role-type-to-member.command';
+import { RemoveRoleTypeFromMemberCommand } from '../../../roles/application/use-cases/remove-role-type-from-member/remove-role-type-from-member.command';
 
 /**
  * Members Controller (Presentation Layer)
@@ -132,5 +135,37 @@ export class MembersController {
   async remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
     const command = new DeleteMemberCommand(id);
     await this.memberApplicationService.deleteMember(command);
+  }
+
+  // ===========================================
+  // Ecclesiastical Label Assignment
+  // ===========================================
+
+  /**
+   * POST /members/:id/role-types
+   * Assign an ecclesiastical label to a member
+   */
+  @Post(':id/role-types')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async assignRoleType(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: AssignRoleTypeDto,
+  ): Promise<void> {
+    const command = new AssignRoleTypeToMemberCommand(id, dto.roleTypeId);
+    await this.memberApplicationService.assignRoleType(command);
+  }
+
+  /**
+   * DELETE /members/:id/role-types/:roleTypeId
+   * Unassign an ecclesiastical label from a member
+   */
+  @Delete(':id/role-types/:roleTypeId')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async removeRoleType(
+    @Param('id', ParseIntPipe) id: number,
+    @Param('roleTypeId', ParseIntPipe) roleTypeId: number,
+  ): Promise<void> {
+    const command = new RemoveRoleTypeFromMemberCommand(id, roleTypeId);
+    await this.memberApplicationService.removeRoleType(command);
   }
 }

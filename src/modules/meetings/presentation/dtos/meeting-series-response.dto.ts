@@ -1,5 +1,6 @@
 import { MeetingSeries } from '../../domain/meeting-series.aggregate';
 import { MeetingFrequency, AudienceType, DayOfWeek, MonthlyRuleType, WeekOrdinal } from '../../../../core/common/constants/status.constants';
+import { AudienceConfig } from '../../domain/services/expected-attendees.query-service.interface';
 
 export class MeetingSeriesResponseDto {
   seriesId: number;
@@ -9,6 +10,7 @@ export class MeetingSeriesResponseDto {
   gdiId?: number;
   areaId?: number;
   meetingTypeId?: number;
+  audienceConfig?: AudienceConfig;
   frequency: MeetingFrequency;
   startDate: string;
   endDate?: string;
@@ -33,6 +35,7 @@ export class MeetingSeriesResponseDto {
     dto.gdiId = series.gdiId || undefined;
     dto.areaId = series.areaId || undefined;
     dto.meetingTypeId = series.meetingTypeId || undefined;
+    dto.audienceConfig = series.audienceConfig || undefined;
     dto.frequency = series.frequency;
     dto.startDate = series.startDate.toISOString().split('T')[0];
     dto.endDate = series.endDate?.toISOString().split('T')[0];

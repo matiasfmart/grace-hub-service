@@ -29,6 +29,13 @@ export class MeetingSeriesEntity {
   @Column({ name: 'meeting_type_id', type: 'integer', nullable: true })
   meetingTypeId?: number;
 
+  /**
+   * Configuration for BY_CATEGORIES audience type
+   * Structure: { roleTypeIds?: number[], labels?: string[], combineMode?: 'OR' | 'AND' }
+   */
+  @Column({ name: 'audience_config', type: 'jsonb', nullable: true })
+  audienceConfig?: Record<string, any>;
+
   @Column({
     name: 'frequency',
     type: 'enum',

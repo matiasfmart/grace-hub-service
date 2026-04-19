@@ -1,22 +1,27 @@
 import { AggregateRoot } from '../../../core/domain/base/aggregate-root';
 import { SeriesName } from './value-objects/series-name.vo';
 import { MeetingFrequency, AudienceType, DayOfWeek, MonthlyRuleType, WeekOrdinal } from '../../../core/common/constants/status.constants';
+import { AudienceConfig } from './services/expected-attendees.query-service.interface';
 
 /**
  * Aggregate Root: Meeting Series
  *
  * Represents a template for recurring or one-time meetings.
- * Uses audienceType to determine who should attend:
+ * Uses audienceType to determine who should attend (ADR-004/005):
  * - 'gdi': Members of a specific GDI
- * - 'area': Members of a specific Area
- * - 'by_categories': Members matching configured categories (via meetingTypeId)
+ * - 'area': Members of a specific Area  
  * - 'all_active': All active members
+ * - 'integrated': Members with operative level >= 1
+ * - 'workers': Members with operative level >= 2
+ * - 'leaders': Members with operative level >= 3
+ * - 'mentors': Members with operative level = 4
+ * - 'by_categories': Members matching configured ecclesiastical labels (via audienceConfig)
  *
  * Business Rules:
  * - audienceType='gdi' requires gdiId
  * - audienceType='area' requires areaId
- * - audienceType='by_categories' requires meetingTypeId
- * - audienceType='all_active' requires no FK
+ * - audienceType='by_categories' requires audienceConfig
+ * - Other audience types require no additional config
  */
 export class MeetingSeries extends AggregateRoot {
   private constructor(
@@ -27,6 +32,7 @@ export class MeetingSeries extends AggregateRoot {
     private _gdiId: number | null,
     private _areaId: number | null,
     private _meetingTypeId: number | null,
+    private _audienceConfig: AudienceConfig | null,
     private _frequency: MeetingFrequency,
     private _startDate: Date,
     private _endDate: Date | null,
@@ -76,6 +82,7 @@ export class MeetingSeries extends AggregateRoot {
       gdiId,
       null,
       options?.meetingTypeId || null,
+      null, // audienceConfig
       frequency,
       startDate,
       options?.endDate || null,
@@ -122,6 +129,7 @@ export class MeetingSeries extends AggregateRoot {
       null,
       areaId,
       options?.meetingTypeId || null,
+      null, // audienceConfig
       frequency,
       startDate,
       options?.endDate || null,
@@ -139,10 +147,11 @@ export class MeetingSeries extends AggregateRoot {
   }
 
   /**
-   * Factory: Create General Meeting Series (by categories)
+   * Factory: Create General Meeting Series (by categories/labels)
+   * Uses audienceConfig to specify which role_types to include
    */
   public static createByCategories(
-    meetingTypeId: number,
+    audienceConfig: AudienceConfig,
     name: SeriesName,
     frequency: MeetingFrequency,
     startDate: Date,
@@ -166,7 +175,8 @@ export class MeetingSeries extends AggregateRoot {
       AudienceType.BY_CATEGORIES,
       null,
       null,
-      meetingTypeId,
+      null,
+      audienceConfig,
       frequency,
       startDate,
       options?.endDate || null,
@@ -211,6 +221,7 @@ export class MeetingSeries extends AggregateRoot {
       null,
       null,
       null,
+      null, // audienceConfig
       frequency,
       startDate,
       options?.endDate || null,
@@ -238,6 +249,7 @@ export class MeetingSeries extends AggregateRoot {
     gdiId: number | null,
     areaId: number | null,
     meetingTypeId: number | null,
+    audienceConfig: AudienceConfig | null,
     frequency: MeetingFrequency,
     startDate: Date,
     endDate: Date | null,
@@ -261,6 +273,7 @@ export class MeetingSeries extends AggregateRoot {
       gdiId,
       areaId,
       meetingTypeId,
+      audienceConfig,
       frequency,
       startDate,
       endDate,
@@ -308,6 +321,10 @@ export class MeetingSeries extends AggregateRoot {
 
   get meetingTypeId(): number | null {
     return this._meetingTypeId;
+  }
+
+  get audienceConfig(): AudienceConfig | null {
+    return this._audienceConfig;
   }
 
   get frequency(): MeetingFrequency {
@@ -405,6 +422,17 @@ export class MeetingSeries extends AggregateRoot {
 
   updateEndDate(endDate: Date | null): void {
     this._endDate = endDate;
+    this._updatedAt = new Date();
+  }
+
+  /**
+   * Update audience type and optionally the audience config.
+   * For general series (all_active, integrated, workers, leaders, mentors, by_categories).
+   * Does NOT change gdiId/areaId since those are structural and immutable after creation.
+   */
+  updateAudienceType(audienceType: AudienceType, audienceConfig?: AudienceConfig | null): void {
+    this._audienceType = audienceType;
+    this._audienceConfig = audienceConfig !== undefined ? audienceConfig : null;
     this._updatedAt = new Date();
   }
 

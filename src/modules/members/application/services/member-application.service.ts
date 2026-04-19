@@ -12,6 +12,10 @@ import { DeleteMemberCommand } from '../commands/delete-member.command';
 import { Member } from '../../domain/member.aggregate';
 import { MemberWithAssignmentsReadModel } from '../../domain/read-models/member-with-assignments.read-model';
 import { PaginatedMembersResult } from '../../domain/read-models/member-query.types';
+import { AssignRoleTypeToMemberUseCase } from '../../../roles/application/use-cases/assign-role-type-to-member/assign-role-type-to-member.use-case';
+import { RemoveRoleTypeFromMemberUseCase } from '../../../roles/application/use-cases/remove-role-type-from-member/remove-role-type-from-member.use-case';
+import { AssignRoleTypeToMemberCommand } from '../../../roles/application/use-cases/assign-role-type-to-member/assign-role-type-to-member.command';
+import { RemoveRoleTypeFromMemberCommand } from '../../../roles/application/use-cases/remove-role-type-from-member/remove-role-type-from-member.command';
 
 /**
  * Application Service for Member module
@@ -34,6 +38,8 @@ export class MemberApplicationService {
     private readonly getMembersFilteredUseCase: GetMembersFilteredUseCase,
     private readonly updateMemberUseCase: UpdateMemberUseCase,
     private readonly deleteMemberUseCase: DeleteMemberUseCase,
+    private readonly assignRoleTypeToMemberUseCase: AssignRoleTypeToMemberUseCase,
+    private readonly removeRoleTypeFromMemberUseCase: RemoveRoleTypeFromMemberUseCase,
   ) {}
 
   // Command operations (return Aggregate)
@@ -62,5 +68,14 @@ export class MemberApplicationService {
     options: GetMembersFilteredOptions
   ): Promise<PaginatedMembersResult<MemberWithAssignmentsReadModel>> {
     return await this.getMembersFilteredUseCase.execute(options);
+  }
+
+  // Role assignment operations
+  async assignRoleType(command: AssignRoleTypeToMemberCommand): Promise<void> {
+    return await this.assignRoleTypeToMemberUseCase.execute(command);
+  }
+
+  async removeRoleType(command: RemoveRoleTypeFromMemberCommand): Promise<void> {
+    return await this.removeRoleTypeFromMemberUseCase.execute(command);
   }
 }

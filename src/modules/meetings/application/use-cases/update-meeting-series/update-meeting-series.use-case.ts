@@ -41,6 +41,10 @@ export class UpdateMeetingSeriesUseCase {
       series.updateEndDate(command.endDate);
     }
 
+    if (command.audienceType !== undefined) {
+      series.updateAudienceType(command.audienceType, command.audienceConfig);
+    }
+
     return this.seriesRepository.save(series);
   }
 }

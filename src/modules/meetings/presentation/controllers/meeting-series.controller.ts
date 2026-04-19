@@ -2,7 +2,6 @@ import {
   Controller,
   Post,
   Get,
-  Put,
   Patch,
   Delete,
   Body,
@@ -79,6 +78,7 @@ export class MeetingSeriesController {
       dto.gdiId,
       dto.areaId,
       dto.meetingTypeId,
+      dto.audienceConfig,
       dto.endDate ? new Date(dto.endDate) : undefined,
       dto.defaultTime,
       dto.defaultLocation,
@@ -95,7 +95,7 @@ export class MeetingSeriesController {
     return MeetingSeriesResponseDto.fromDomain(series);
   }
 
-  @Put(':id')
+  @Patch(':id')
   @HttpCode(HttpStatus.OK)
   async update(
     @Param('id', ParseIntPipe) id: number,
@@ -108,6 +108,8 @@ export class MeetingSeriesController {
       dto.defaultTime,
       dto.defaultLocation,
       dto.endDate ? new Date(dto.endDate) : undefined,
+      dto.audienceType,
+      dto.audienceConfig,
     );
     const series = await this.updateMeetingSeriesUseCase.execute(command);
     return MeetingSeriesResponseDto.fromDomain(series);

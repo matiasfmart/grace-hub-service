@@ -6,6 +6,8 @@
  * 
  * This service handles the cross-module query to get expected attendees
  * for a meeting based on the series' audienceType.
+ * 
+ * See ADR-004 (Clasificación de Miembros) and ADR-005 (Tipos de Audiencia)
  */
 
 import { AudienceType } from '../../../../core/common/constants/status.constants';
@@ -17,20 +19,33 @@ export interface ExpectedAttendee {
   fullName: string;
 }
 
+/**
+ * Configuration for BY_CATEGORIES audience type
+ * Allows filtering by role_types (ecclesiastical labels)
+ */
+export interface AudienceConfig {
+  /** IDs of role_types to include */
+  roleTypeIds?: number[];
+  /** Names of role_types to include (alternative to IDs) */
+  labels?: string[];
+  /** How to combine multiple filters (default: OR) */
+  combineMode?: 'OR' | 'AND';
+}
+
 export interface IExpectedAttendeesQueryService {
   /**
-   * Get expected attendees based on audience type and related IDs
+   * Get expected attendees based on audience type
    * 
-   * @param audienceType - The type of audience (gdi, area, by_categories, all_active)
+   * @param audienceType - The type of audience (see AudienceType enum)
    * @param gdiId - GDI ID if audienceType is 'gdi'
    * @param areaId - Area ID if audienceType is 'area'
-   * @param meetingTypeId - Meeting type ID if audienceType is 'by_categories'
+   * @param audienceConfig - Configuration for 'by_categories' audience type
    */
   getExpectedAttendees(
     audienceType: AudienceType,
     gdiId: number | null,
     areaId: number | null,
-    meetingTypeId: number | null,
+    audienceConfig: AudienceConfig | null,
   ): Promise<ExpectedAttendee[]>;
 }
 
