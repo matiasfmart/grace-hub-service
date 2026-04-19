@@ -383,6 +383,34 @@ export class MemberRepositoryImpl
       }
     }
 
+    // Join date range filter (church join date)
+    if (options.joinDateFrom) {
+      conditions.push(`m.join_date >= $${paramIndex}::date`);
+      params.push(options.joinDateFrom);
+      paramIndex++;
+    }
+    if (options.joinDateTo) {
+      conditions.push(`m.join_date <= $${paramIndex}::date`);
+      params.push(options.joinDateTo);
+      paramIndex++;
+    }
+
+    // Age range filter — calculated from birth_date at query time
+    // Only applies to members who have birth_date set
+    if (options.ageMin !== undefined || options.ageMax !== undefined) {
+      conditions.push(`m.birth_date IS NOT NULL`);
+      if (options.ageMin !== undefined) {
+        conditions.push(`EXTRACT(YEAR FROM AGE(m.birth_date)) >= $${paramIndex}`);
+        params.push(options.ageMin);
+        paramIndex++;
+      }
+      if (options.ageMax !== undefined) {
+        conditions.push(`EXTRACT(YEAR FROM AGE(m.birth_date)) <= $${paramIndex}`);
+        params.push(options.ageMax);
+        paramIndex++;
+      }
+    }
+
     return { conditions, params };
   }
 

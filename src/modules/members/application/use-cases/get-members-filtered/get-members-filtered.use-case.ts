@@ -42,6 +42,10 @@ export class GetMembersFilteredUseCase {
       roleFilters: options.roleFilters,
       gdiFilters: options.gdiFilters,
       areaFilters: options.areaFilters,
+      joinDateFrom: options.joinDateFrom,
+      joinDateTo: options.joinDateTo,
+      ageMin: options.ageMin,
+      ageMax: options.ageMax,
     });
   }
 }

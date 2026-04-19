@@ -17,6 +17,14 @@ export interface MemberFilterOptions {
   roleFilters?: string[];
   gdiFilters?: string[];
   areaFilters?: string[];
+  /** ISO date string (YYYY-MM-DD). Filters by join_date >= value */
+  joinDateFrom?: string;
+  /** ISO date string (YYYY-MM-DD). Filters by join_date <= value */
+  joinDateTo?: string;
+  /** Minimum age (inclusive), calculated from birth_date */
+  ageMin?: number;
+  /** Maximum age (inclusive), calculated from birth_date */
+  ageMax?: number;
 }
 
 /**

@@ -12,6 +12,10 @@ export interface GetMembersFilteredOptions {
   roleFilters?: string[];
   gdiFilters?: string[];
   areaFilters?: string[];
+  joinDateFrom?: string;
+  joinDateTo?: string;
+  ageMin?: number;
+  ageMax?: number;
 }
 
 /**

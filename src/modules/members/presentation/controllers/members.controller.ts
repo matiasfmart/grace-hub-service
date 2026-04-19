@@ -68,6 +68,10 @@ export class MembersController {
       roleFilters: queryDto.role,
       gdiFilters: queryDto.gdi?.map(String),
       areaFilters: queryDto.area?.map(String),
+      joinDateFrom: queryDto.joinFrom,
+      joinDateTo: queryDto.joinTo,
+      ageMin: queryDto.ageMin,
+      ageMax: queryDto.ageMax,
     };
 
     const result = await this.memberApplicationService.getMembersFiltered(options);
