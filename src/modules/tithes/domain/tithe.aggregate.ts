@@ -7,8 +7,6 @@ export class Tithe extends AggregateRoot {
     private readonly _memberId: number,
     private readonly _year: number,
     private readonly _month: number,
-    private readonly _createdAt?: Date,
-    private _updatedAt?: Date,
   ) {
     super();
   }
@@ -23,8 +21,6 @@ export class Tithe extends AggregateRoot {
       memberId,
       year,
       month,
-      new Date(),
-      new Date(),
     );
     tithe.addDomainEvent(new TitheRecordedEvent(tithe));
     return tithe;
@@ -35,10 +31,8 @@ export class Tithe extends AggregateRoot {
     memberId: number,
     year: number,
     month: number,
-    createdAt: Date,
-    updatedAt: Date,
   ): Tithe {
-    return new Tithe(id, memberId, year, month, createdAt, updatedAt);
+    return new Tithe(id, memberId, year, month);
   }
 
   get id(): number | undefined {
@@ -57,11 +51,4 @@ export class Tithe extends AggregateRoot {
     return this._month;
   }
 
-  get createdAt(): Date | undefined {
-    return this._createdAt;
-  }
-
-  get updatedAt(): Date | undefined {
-    return this._updatedAt;
-  }
 }

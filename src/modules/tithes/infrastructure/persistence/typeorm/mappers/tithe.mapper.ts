@@ -10,12 +10,6 @@ export class TitheMapper {
     entity.memberId = domain.memberId;
     entity.year = domain.year;
     entity.month = domain.month;
-    if (domain.createdAt) {
-      entity.createdAt = domain.createdAt;
-    }
-    if (domain.updatedAt) {
-      entity.updatedAt = domain.updatedAt;
-    }
     return entity;
   }
 
@@ -25,8 +19,6 @@ export class TitheMapper {
       entity.memberId,
       entity.year,
       entity.month,
-      entity.createdAt,
-      entity.updatedAt,
     );
   }
 
