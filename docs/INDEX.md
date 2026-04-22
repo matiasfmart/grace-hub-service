@@ -1,6 +1,6 @@
 # Grace Hub Service - Documentación
 
-> **Última actualización:** 2026-04-18
+> **Última actualización:** 2026-04-22
 
 ## Índice
 
@@ -11,6 +11,7 @@
 - [CLEAN_ARCHITECTURE.md](./architecture/CLEAN_ARCHITECTURE.md) - Explicación de capas y principios
 - [ARCHITECTURE_RULES.md](./architecture/ARCHITECTURE_RULES.md) - Reglas por capa
 - [MEETINGS_ARCHITECTURE.md](./architecture/MEETINGS_ARCHITECTURE.md) - Arquitectura del módulo de reuniones
+- [AUTH_ARCHITECTURE.md](./architecture/AUTH_ARCHITECTURE.md) - Arquitectura del módulo de autenticación
 
 ### Análisis
 - [BACKEND_FRONTEND_COMPARISON.md](./analysis/BACKEND_FRONTEND_COMPARISON.md) - Estado de endpoints vs frontend (98%)
@@ -52,6 +53,7 @@ Para documentación funcional y de negocio, ver:
 | Attendance | `/attendance` | ✅ Completo |
 | Tithes | `/tithes` | ⚠️ Parcial |
 | Role Types | `/role-types` | ✅ Completo |
+| Auth | `/auth` | ✅ Completo |
 
 ### Módulos Pendientes
 

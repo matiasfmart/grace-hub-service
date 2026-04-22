@@ -51,6 +51,10 @@ DATABASE_USERNAME=your_username
 DATABASE_PASSWORD=your_password
 DATABASE_NAME=grace_hub
 DATABASE_SSL=true
+
+# JWT — requerido para autenticación
+JWT_SECRET=<valor aleatorio largo, ver .env.example para instrucciones>
+JWT_EXPIRES_IN=1d
 ```
 
 ### 2. Ejecutar el schema SQL
@@ -65,6 +69,41 @@ npm run start:dev
 
 # El servidor estará disponible en:
 # http://localhost:3001/api/v1
+```
+
+### 4. Crear el primer usuario
+
+Al iniciar, TypeORM crea automáticamente la tabla `users`. Registrá el primer usuario con:
+
+```bash
+curl -X POST http://localhost:3001/api/v1/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"email": "admin@gracehub.church", "password": "tu_password_seguro"}'
+```
+
+Requisitos: email válido, password mínimo 8 caracteres.
+
+> ⚠️ **Registro en producción:** El endpoint `/auth/register` es público por diseño para poder crear el primer usuario. Una vez que existe al menos un usuario, tenés dos opciones para producción:
+>
+> **Opción A — Mantenerlo público** (registro abierto): cualquiera puede crear una cuenta. Válido solo si la app tiene registro de usuarios libre.
+>
+> **Opción B — Hacerlo privado** (registro por invitación): quitarle `@Public()`. A partir de ese momento solo un usuario ya autenticado puede llamarlo (un admin logueado que quiere agregar otro usuario). El primer usuario debe existir de antemano — crearlo con el comando `curl` de arriba antes de restringir el endpoint.
+
+**Alternativa: insertar el primer usuario directo en la base de datos**
+
+Si el endpoint `register` ya está privado o no está disponible, podés crear el usuario directamente con SQL. El password debe estar hasheado con bcrypt (12 rounds) — no se puede insertar el texto plano.
+
+Generá el hash desde Node.js:
+
+```bash
+node -e "require('bcrypt').hash('tu_password_seguro', 12).then(h => console.log(h))"
+```
+
+Luego insertá el usuario en PostgreSQL:
+
+```sql
+INSERT INTO users (email, password_hash)
+VALUES ('admin@gracehub.church', '$2b$12$<hash_generado_arriba>');
 ```
 
 ## 📋 Lo que YA está hecho
@@ -237,10 +276,31 @@ export class GetMemberWithRolesUseCase {
 
 ### 🟢 BAJA PRIORIDAD
 
-6. **Agregar autenticación JWT**
+6. ~~**Agregar autenticación JWT**~~ ✅ Implementado (ver [AUTH_ARCHITECTURE.md](../architecture/AUTH_ARCHITECTURE.md))
 7. **Implementar tests unitarios**
 8. **Implementar tests E2E**
 9. **Optimizar queries con índices**
+
+## 🔒 Cómo Agregar un Endpoint Público
+
+Todos los endpoints del backend requieren autenticación por defecto (guard global en `AppModule`). Para excluir un endpoint, decorarlo con `@Public()`:
+
+```typescript
+import { Public } from '../../auth/decorators/public.decorator';
+
+@Controller('webhooks')
+export class WebhooksController {
+  @Public()          // ← este endpoint no requiere cookie auth
+  @Post('stripe')
+  async stripeWebhook(@Body() payload: unknown) { ... }
+}
+```
+
+`@Public()` es el **único** mecanismo válido. No modificar listas en `main.ts` ni en el guard.
+
+Para más detalle, ver [AUTH_ARCHITECTURE.md → Cómo Marcar un Endpoint como Público](../architecture/AUTH_ARCHITECTURE.md#cómo-marcar-un-endpoint-como-público).
+
+---
 
 ## 🎨 Patrones de Diseño Aplicados
 

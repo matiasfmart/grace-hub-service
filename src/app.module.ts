@@ -1,6 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
 import { DatabaseModule } from './core/database/database.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { AuthGuard } from './modules/auth/guards/auth.guard';
 import { MembersModule } from './modules/members/members.module';
 import { GdisModule } from './modules/gdis/gdis.module';
 import { AreasModule } from './modules/areas/areas.module';
@@ -28,6 +31,11 @@ import { RolesModule } from './modules/roles/roles.module';
     AttendanceModule,
     TithesModule,
     RolesModule,
+    AuthModule,
+  ],
+  providers: [
+    // Global authentication guard — all endpoints require JWT cookie unless @Public()
+    { provide: APP_GUARD, useClass: AuthGuard },
   ],
 })
 export class AppModule {}

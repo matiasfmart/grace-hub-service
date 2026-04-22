@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import * as cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
 import { DomainExceptionFilter } from './core/infrastructure/filters/domain-exception.filter';
 
@@ -12,6 +13,9 @@ async function bootstrap() {
     origin: process.env.FRONTEND_URL || 'http://localhost:3000',
     credentials: true,
   });
+
+  // Cookie parser (required for httpOnly JWT cookies)
+  app.use(cookieParser());
 
   // Global validation pipe
   app.useGlobalPipes(
