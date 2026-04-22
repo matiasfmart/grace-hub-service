@@ -72,6 +72,8 @@ export class MembersController {
       joinDateTo: queryDto.joinTo,
       ageMin: queryDto.ageMin,
       ageMax: queryDto.ageMax,
+      sortBy: queryDto.sortBy,
+      sortOrder: (queryDto.sortOrder === 'desc' ? 'desc' : 'asc') as 'asc' | 'desc',
     };
 
     const result = await this.memberApplicationService.getMembersFiltered(options);

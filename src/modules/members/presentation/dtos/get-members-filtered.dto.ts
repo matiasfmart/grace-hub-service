@@ -82,4 +82,14 @@ export class GetMembersFilteredDto {
   @IsInt()
   @Min(0)
   ageMax?: number;
+
+  /** Sort field */
+  @IsOptional()
+  @IsString()
+  sortBy?: string;
+
+  /** Sort direction */
+  @IsOptional()
+  @IsString()
+  sortOrder?: string;
 }

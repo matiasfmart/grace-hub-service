@@ -25,6 +25,10 @@ export interface MemberFilterOptions {
   ageMin?: number;
   /** Maximum age (inclusive), calculated from birth_date */
   ageMax?: number;
+  /** Column to sort by (whitelisted) */
+  sortBy?: string;
+  /** Sort direction */
+  sortOrder?: 'asc' | 'desc';
 }
 
 /**

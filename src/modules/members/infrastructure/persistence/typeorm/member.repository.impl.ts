@@ -236,11 +236,22 @@ export class MemberRepositoryImpl
     const countResult = await this.memberRepository.query(countQuery, params);
     const totalCount = parseInt(countResult[0]?.total || '0', 10);
     
+    // Whitelist of allowed sort fields — prevents SQL injection
+    const ALLOWED_SORT_FIELDS: Record<string, string> = {
+      fullName: "m.first_name, m.last_name",
+      churchJoinDate: "m.join_date",
+      birthDate: "m.birth_date",
+    };
+    const sortField = (options.sortBy && ALLOWED_SORT_FIELDS[options.sortBy])
+      ? ALLOWED_SORT_FIELDS[options.sortBy]
+      : ALLOWED_SORT_FIELDS.fullName;
+    const sortDir = options.sortOrder === 'desc' ? 'DESC' : 'ASC';
+
     // Data query with pagination
     const dataQuery = `
       ${MEMBER_WITH_ASSIGNMENTS_QUERY}
       ${conditions.length > 0 ? 'WHERE ' + conditions.join(' AND ') : ''}
-      ORDER BY m.first_name, m.last_name
+      ORDER BY ${sortField} ${sortDir}
       LIMIT $${params.length + 1} OFFSET $${params.length + 2}
     `;
     

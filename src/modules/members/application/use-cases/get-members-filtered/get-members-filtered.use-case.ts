@@ -46,6 +46,8 @@ export class GetMembersFilteredUseCase {
       joinDateTo: options.joinDateTo,
       ageMin: options.ageMin,
       ageMax: options.ageMax,
+      sortBy: options.sortBy,
+      sortOrder: options.sortOrder,
     });
   }
 }

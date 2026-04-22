@@ -16,6 +16,8 @@ export interface GetMembersFilteredOptions {
   joinDateTo?: string;
   ageMin?: number;
   ageMax?: number;
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
 }
 
 /**
