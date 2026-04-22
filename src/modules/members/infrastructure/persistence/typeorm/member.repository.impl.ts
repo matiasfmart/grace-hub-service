@@ -391,11 +391,11 @@ export class MemberRepositoryImpl
         )`);
       }
 
-      // Worker: belongs to a GDI or Area but holds no structural leadership role
+      // Worker = integrante de Área sin rol de liderazgo (ADR-004 §2.3, REGLAS_DE_NEGOCIO §3.1).
+      // GDI-only membership (gdi_memberships) → Nivel 1 Miembro, NOT Obrero.
       if (options.roleFilters.includes('Worker')) {
         roleConditions.push(`(
-          (EXISTS(SELECT 1 FROM gdi_memberships gm WHERE gm.member_id = m.member_id)
-           OR EXISTS(SELECT 1 FROM area_memberships am WHERE am.member_id = m.member_id))
+          EXISTS(SELECT 1 FROM area_memberships am WHERE am.member_id = m.member_id)
           AND NOT EXISTS(SELECT 1 FROM gdis WHERE guide_id = m.member_id)
           AND NOT EXISTS(SELECT 1 FROM gdis WHERE mentor_id = m.member_id)
           AND NOT EXISTS(SELECT 1 FROM areas WHERE leader_id = m.member_id)
@@ -484,8 +484,10 @@ export class MemberRepositoryImpl
     if (raw.is_gdi_mentor) roles.push('GdiMentor');
     if (raw.is_area_leader) roles.push('AreaLeader');
     if (raw.is_area_mentor) roles.push('AreaMentor');
-    // If member belongs to any group but has no leadership role, they're a worker
-    if (roles.length === 0 && (assignedGdi || assignedAreas.length > 0)) {
+    // Worker = integrante de Área sin rol de liderazgo (ADR-004 §2.3, REGLAS_DE_NEGOCIO §3.1).
+    // GDI-only membership → Nivel 1 "Miembro", NOT Obrero.
+    // assignedGdi alone must NOT trigger Worker.
+    if (roles.length === 0 && assignedAreas.length > 0) {
       roles.push('Worker');
     }
 
