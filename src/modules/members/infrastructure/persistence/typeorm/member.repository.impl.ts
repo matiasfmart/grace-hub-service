@@ -354,10 +354,34 @@ export class MemberRepositoryImpl
     }
 
     // Role filter
+    // Values match MemberRoleType: GdiGuide | GdiMentor | AreaLeader | AreaMentor | Worker
+    // plus the sentinel 'no-role-assigned'. Each maps to a structural column in gdis/areas.
+    // Multiple selected roles are combined with OR (union semantics).
     if (options.roleFilters && options.roleFilters.length > 0) {
       const roleConditions: string[] = [];
       const hasNoRoleFilter = options.roleFilters.includes('no-role-assigned');
 
+      // GdiGuide: member is listed as guide_id on at least one GDI
+      if (options.roleFilters.includes('GdiGuide')) {
+        roleConditions.push(`EXISTS(SELECT 1 FROM gdis WHERE guide_id = m.member_id)`);
+      }
+
+      // GdiMentor: member is listed as mentor_id on at least one GDI
+      if (options.roleFilters.includes('GdiMentor')) {
+        roleConditions.push(`EXISTS(SELECT 1 FROM gdis WHERE mentor_id = m.member_id)`);
+      }
+
+      // AreaLeader: member is listed as leader_id on at least one Area
+      if (options.roleFilters.includes('AreaLeader')) {
+        roleConditions.push(`EXISTS(SELECT 1 FROM areas WHERE leader_id = m.member_id)`);
+      }
+
+      // AreaMentor: member is listed as mentor_id on at least one Area
+      if (options.roleFilters.includes('AreaMentor')) {
+        roleConditions.push(`EXISTS(SELECT 1 FROM areas WHERE mentor_id = m.member_id)`);
+      }
+
+      // Legacy umbrella 'Leader': any of the 4 structural leadership roles
       if (options.roleFilters.includes('Leader')) {
         roleConditions.push(`(
           EXISTS(SELECT 1 FROM gdis WHERE guide_id = m.member_id)
@@ -367,6 +391,7 @@ export class MemberRepositoryImpl
         )`);
       }
 
+      // Worker: belongs to a GDI or Area but holds no structural leadership role
       if (options.roleFilters.includes('Worker')) {
         roleConditions.push(`(
           (EXISTS(SELECT 1 FROM gdi_memberships gm WHERE gm.member_id = m.member_id)
@@ -378,6 +403,7 @@ export class MemberRepositoryImpl
         )`);
       }
 
+      // no-role-assigned: not in any GDI/Area membership and no structural leadership role
       if (hasNoRoleFilter) {
         roleConditions.push(`(
           NOT EXISTS(SELECT 1 FROM gdi_memberships gm WHERE gm.member_id = m.member_id)
