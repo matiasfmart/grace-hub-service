@@ -20,6 +20,9 @@
 - [DEVELOPMENT_GUIDE.md](./guides/DEVELOPMENT_GUIDE.md) - Guía de desarrollo
 - [STORED_PROCEDURES_EXAMPLES.sql](./guides/STORED_PROCEDURES_EXAMPLES.sql) - Ejemplos de stored procedures
 
+### Decisiones de Arquitectura (ADR)
+- [ADR-007: Estrategia de Build en Producción](../../docs-grace-hub/decisions/007-estrategia-build-produccion.md) - Por qué el Build Command de Render usa `--include=dev` y cómo migrar a Docker cuando corresponda
+
 ### Base de Datos
 - [current_schema.sql](./current_schema.sql) - Schema SQL actual
 

@@ -2,9 +2,9 @@
 
 ## 🎯 Estado del Proyecto
 
-✅ **Proyecto configurado y listo para desarrollo**
+✅ **Backend completamente implementado**
 
-El backend está completamente estructurado con Clean Architecture y listo para que implementes la lógica de negocio y los stored procedures.
+Todos los módulos tienen lógica de negocio real: use cases, commands, application services, repositorios TypeORM, DTOs tipados. El backend está listo para producción.
 
 ## 📂 Estructura Creada
 
@@ -23,13 +23,14 @@ src/
 │       └── constants/                # ✅ Enums y constantes
 │
 └── modules/
-    ├── members/                      # ✅ CRUD Members implementado
+    ├── members/                      # ✅ CRUD completo implementado
     ├── tithes/                       # ✅ CRUD + Batch Upsert implementado
-    ├── gdis/                         # ✅ CRUD GDIs implementado
-    ├── areas/                        # ✅ CRUD Areas implementado
-    ├── meetings/                     # ⚠️  Controladores creados (sin lógica)
-    ├── attendance/                   # ⚠️  Controladores creados (sin lógica)
-    └── roles/                        # ⚠️  Controladores creados (sin lógica)
+    ├── gdis/                         # ✅ CRUD completo implementado
+    ├── areas/                        # ✅ CRUD completo implementado
+    ├── meetings/                     # ✅ CRUD completo implementado (meetings + series)
+    ├── attendance/                   # ✅ CRUD completo implementado
+    ├── roles/                        # ✅ CRUD completo implementado (role-types)
+    └── auth/                         # ✅ Autenticación JWT implementada
 ```
 
 ## 🚀 Inicio Rápido
@@ -116,11 +117,15 @@ VALUES ('admin@gracehub.church', '$2b$12$<hash_generado_arriba>');
 - [x] Validación de DTOs con class-validator
 - [x] CORS habilitado para el frontend
 
-### ✅ Módulos Básicos Funcionales
-- [x] **Members**: GET all, POST create (funcionales)
-- [x] **Tithes**: GET all, POST batch-upsert (funcional)
-- [x] **GDIs**: GET all (funcional)
-- [x] **Areas**: GET all (funcional)
+### ✅ Módulos Funcionales
+- [x] **Members**: CRUD completo
+- [x] **Tithes**: GET, POST batch-upsert
+- [x] **GDIs**: CRUD completo
+- [x] **Areas**: CRUD completo
+- [x] **Meetings**: CRUD completo (instancias + series, expected-attendees)
+- [x] **Attendance**: GET, POST, POST batch por reunión
+- [x] **Roles**: CRUD completo (role-types configurables)
+- [x] **Auth**: Registro, login, logout, me (JWT httpOnly cookie)
 
 ### ✅ Arquitectura Limpia
 - [x] Domain Layer: Entidades de dominio puras
@@ -128,17 +133,11 @@ VALUES ('admin@gracehub.church', '$2b$12$<hash_generado_arriba>');
 - [x] Infrastructure Layer: TypeORM entities y repositories
 - [x] Presentation Layer: Controllers REST
 
-## 🔨 Lo que FALTA implementar
+## 🔨 Cómo agregar un nuevo endpoint
 
-### ⚠️ Endpoints Marcados con `// TODO`
+Todos los controladores ya tienen su lógica implementada. Para agregar un nuevo endpoint seguí este patrón:
 
-Cada controlador tiene endpoints con comentarios `// TODO` que necesitan:
-
-1. **Crear el Use Case** correspondiente
-2. **Registrar el Use Case** en el módulo
-3. **Inyectar el Use Case** en el controller
-
-### Ejemplo: Implementar "Get Member by ID"
+### Ejemplo: Agregar "Get Member by ID"
 
 #### Paso 1: Crear Use Case
 ```typescript
@@ -245,41 +244,25 @@ export class GetMemberWithRolesUseCase {
 }
 ```
 
-## 📝 Tareas Prioritarias
-
-### 🔴 ALTA PRIORIDAD
-
-1. **Implementar lógica de cálculo de roles dinámicos**
-   - Archivo: `src/modules/roles/`
-   - Ver sección "Cálculo Dinámico de Roles" en tu documento de contexto
-
-2. **Implementar generación automática de instancias de reuniones**
-   - Archivo: `src/modules/meetings/`
-   - Lógica de recurrencia semanal/mensual
-   - Generar instancias al crear/actualizar series
-
-3. **Implementar snapshots en asistencia**
-   - Archivo: `src/modules/attendance/`
-   - Capturar estado del miembro al momento de registrar asistencia
+## 📝 Tareas Pendientes
 
 ### 🟡 MEDIA PRIORIDAD
 
-4. **Completar CRUD de todos los módulos**
-   - Update endpoints
-   - Delete endpoints
-   - GetById endpoints
-
-5. **Implementar transacciones complejas**
+1. **Implementar transacciones complejas**
    - Cambio de guía en GDI (afecta roles)
    - Eliminación de miembro (cascade)
    - Asignación de miembros a áreas/GDIs
 
+2. **Restricción de registro en producción**
+   - Quitar `@Public()` de `POST /auth/register` una vez que exista el primer usuario
+   - Ver sección "Registro en producción" más arriba
+
 ### 🟢 BAJA PRIORIDAD
 
+3. **Implementar tests unitarios**
+4. **Implementar tests E2E**
+5. **Optimizar queries con índices**
 6. ~~**Agregar autenticación JWT**~~ ✅ Implementado (ver [AUTH_ARCHITECTURE.md](../architecture/AUTH_ARCHITECTURE.md))
-7. **Implementar tests unitarios**
-8. **Implementar tests E2E**
-9. **Optimizar queries con índices**
 
 ## 🔒 Cómo Agregar un Endpoint Público
 
@@ -366,6 +349,6 @@ Antes de implementar un nuevo endpoint:
 
 ---
 
-**¡El proyecto está listo para que desarrolles la lógica de negocio!** 🚀
+**El proyecto está completamente implementado y listo para producción.** 🚀
 
-Simplemente agrega los stored procedures en PostgreSQL y llámalos desde los repositorios usando el método `executeStoredProcedure()` heredado de `BaseRepository`.
+Para extender funcionalidad: agregá use cases en `application/use-cases/`, registrá en el módulo, e inyectá en el controller. Para queries complejas podés usar `executeStoredProcedure()` heredado de `BaseRepository`.
