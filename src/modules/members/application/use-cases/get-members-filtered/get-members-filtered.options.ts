@@ -18,6 +18,7 @@ export interface GetMembersFilteredOptions {
   ageMax?: number;
   sortBy?: string;
   sortOrder?: 'asc' | 'desc';
+  ecclesiasticalRoleTypeIds?: number[];
 }
 
 /**

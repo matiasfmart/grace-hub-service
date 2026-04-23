@@ -48,6 +48,7 @@ export class GetMembersFilteredUseCase {
       ageMax: options.ageMax,
       sortBy: options.sortBy,
       sortOrder: options.sortOrder,
+      ecclesiasticalRoleTypeIds: options.ecclesiasticalRoleTypeIds,
     });
   }
 }

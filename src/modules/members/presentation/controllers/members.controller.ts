@@ -74,6 +74,7 @@ export class MembersController {
       ageMax: queryDto.ageMax,
       sortBy: queryDto.sortBy,
       sortOrder: (queryDto.sortOrder === 'desc' ? 'desc' : 'asc') as 'asc' | 'desc',
+      ecclesiasticalRoleTypeIds: queryDto.label,
     };
 
     const result = await this.memberApplicationService.getMembersFiltered(options);

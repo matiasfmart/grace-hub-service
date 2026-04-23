@@ -448,6 +448,17 @@ export class MemberRepositoryImpl
       }
     }
 
+    // Ecclesiastical label filter — OR semantics: member has ANY of the selected role_type_ids
+    if (options.ecclesiasticalRoleTypeIds && options.ecclesiasticalRoleTypeIds.length > 0) {
+      conditions.push(`EXISTS(
+        SELECT 1 FROM member_roles mr
+        WHERE mr.member_id = m.member_id
+        AND mr.role_type_id = ANY($${paramIndex}::int[])
+      )`);
+      params.push(options.ecclesiasticalRoleTypeIds);
+      paramIndex++;
+    }
+
     return { conditions, params };
   }
 

@@ -92,4 +92,18 @@ export class GetMembersFilteredDto {
   @IsOptional()
   @IsString()
   sortOrder?: string;
+
+  /** Filter by ecclesiastical label IDs (comma-separated). OR semantics. */
+  @IsOptional()
+  @IsArray()
+  @Transform(({ value }) => {
+    if (typeof value === 'string') {
+      return value.split(',').map(Number).filter(n => !isNaN(n));
+    }
+    if (Array.isArray(value)) {
+      return value.map(Number).filter(n => !isNaN(n));
+    }
+    return value;
+  })
+  label?: number[];
 }

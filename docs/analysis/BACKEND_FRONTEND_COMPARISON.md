@@ -1,6 +1,6 @@
 # Análisis Comparativo: Backend vs Frontend
 
-> **Última actualización:** 2026-04-18  
+> **Última actualización:** 2026-04-22  
 > **Estado:** 98% funcional (68/70 casuísticas)
 
 Este documento compara cada funcionalidad que el frontend necesita con el estado actual del backend.
@@ -24,7 +24,7 @@ Este documento compara cada funcionalidad que el frontend necesita con el estado
 | 1.1 | Listar miembros paginados | `GET /members/search` | ✅ |
 | 1.2 | Buscar por nombre/email | `search` param | ✅ |
 | 1.3 | Filtrar por estado | `status[]` param | ✅ |
-| 1.4 | Filtrar por rol | Calculado en frontend | ✅ |
+| 1.4 | Filtrar por rol | `role[]` query param en `GET /members/search` (mapeado a sentinels SQL por `buildFilterConditions`) | ✅ |
 | 1.5 | Filtrar por GDI | `gdi[]` param | ✅ |
 | 1.6 | Filtrar por Área | `area[]` param | ✅ |
 | 1.7 | Crear miembro | `POST /members` | ✅ |

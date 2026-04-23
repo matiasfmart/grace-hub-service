@@ -29,6 +29,8 @@ export interface MemberFilterOptions {
   sortBy?: string;
   /** Sort direction */
   sortOrder?: 'asc' | 'desc';
+  /** Filter by ecclesiastical role type IDs — OR semantics */
+  ecclesiasticalRoleTypeIds?: number[];
 }
 
 /**
