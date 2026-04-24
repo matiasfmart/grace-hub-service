@@ -1,4 +1,5 @@
 import { Gdi } from '../gdi.aggregate';
+import { GdiWithStats } from '../read-models/gdi-with-stats.read-model';
 
 /**
  * Repository Interface for GDI Aggregate
@@ -10,6 +11,8 @@ export interface IGdiRepository {
   save(gdi: Gdi): Promise<Gdi>;
   findById(id: number): Promise<Gdi | null>;
   findAll(): Promise<Gdi[]>;
+  /** Returns all GDIs with computed health statistics (attendance %, last meeting date). */
+  findAllWithStats(): Promise<GdiWithStats[]>;
   findByGuide(guideId: number): Promise<Gdi[]>;
   findByMentor(mentorId: number): Promise<Gdi[]>;
   delete(id: number): Promise<void>;

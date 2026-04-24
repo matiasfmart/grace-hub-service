@@ -3,12 +3,13 @@ import {
   IGdiRepository,
   GDI_REPOSITORY,
 } from '../../../domain/repositories/gdi.repository.interface';
-import { Gdi } from '../../../domain/gdi.aggregate';
+import { GdiWithStats } from '../../../domain/read-models/gdi-with-stats.read-model';
 
 /**
- * Use Case: Get all GDIs
+ * Use Case: Get all GDIs with health statistics
  *
- * Simple query use case
+ * Returns GDIs enriched with computed avgAttendancePct and lastMeetingDate
+ * for display on the groups listing page.
  */
 @Injectable()
 export class GetAllGdisUseCase {
@@ -17,7 +18,7 @@ export class GetAllGdisUseCase {
     private readonly gdiRepository: IGdiRepository,
   ) {}
 
-  async execute(): Promise<Gdi[]> {
-    return await this.gdiRepository.findAll();
+  async execute(): Promise<GdiWithStats[]> {
+    return await this.gdiRepository.findAllWithStats();
   }
 }

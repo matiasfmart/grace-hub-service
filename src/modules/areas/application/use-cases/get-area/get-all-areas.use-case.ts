@@ -3,7 +3,7 @@ import {
   IAreaRepository,
   AREA_REPOSITORY,
 } from '../../../domain/repositories/area.repository.interface';
-import { Area } from '../../../domain/area.aggregate';
+import { AreaWithStats } from '../../../domain/read-models/area-with-stats.read-model';
 
 @Injectable()
 export class GetAllAreasUseCase {
@@ -12,7 +12,7 @@ export class GetAllAreasUseCase {
     private readonly areaRepository: IAreaRepository,
   ) {}
 
-  async execute(): Promise<Area[]> {
-    return await this.areaRepository.findAll();
+  async execute(): Promise<AreaWithStats[]> {
+    return await this.areaRepository.findAllWithStats();
   }
 }

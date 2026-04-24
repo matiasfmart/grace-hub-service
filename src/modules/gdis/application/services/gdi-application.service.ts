@@ -13,6 +13,7 @@ import { DeleteGdiCommand } from '../commands/delete-gdi.command';
 import { AssignMemberToGdiCommand } from '../commands/assign-member-to-gdi.command';
 import { RemoveMemberFromGdiCommand } from '../commands/remove-member-from-gdi.command';
 import { Gdi } from '../../domain/gdi.aggregate';
+import { GdiWithStats } from '../../domain/read-models/gdi-with-stats.read-model';
 import { GdiMembership } from '../../domain/gdi-membership.aggregate';
 
 /**
@@ -38,7 +39,7 @@ export class GdiApplicationService {
     return await this.createGdiUseCase.execute(command);
   }
 
-  async getAllGdis(): Promise<Gdi[]> {
+  async getAllGdis(): Promise<GdiWithStats[]> {
     return await this.getAllGdisUseCase.execute();
   }
 

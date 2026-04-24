@@ -50,7 +50,7 @@ export class GdisController {
   @HttpCode(HttpStatus.OK)
   async findAll(): Promise<GdiResponseDto[]> {
     const gdis = await this.gdiApplicationService.getAllGdis();
-    return GdiResponseDto.fromDomainArray(gdis);
+    return GdiResponseDto.fromStatsArray(gdis);
   }
 
   @Get(':id')
