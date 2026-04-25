@@ -13,6 +13,7 @@ import { DeleteAreaCommand } from '../commands/delete-area.command';
 import { AssignMemberToAreaCommand } from '../commands/assign-member-to-area.command';
 import { RemoveMemberFromAreaCommand } from '../commands/remove-member-from-area.command';
 import { Area } from '../../domain/area.aggregate';
+import { AreaWithStats } from '../../domain/read-models/area-with-stats.read-model';
 import { AreaMembership } from '../../domain/area-membership.aggregate';
 
 @Injectable()
@@ -32,7 +33,7 @@ export class AreaApplicationService {
     return await this.createAreaUseCase.execute(command);
   }
 
-  async getAllAreas(): Promise<Area[]> {
+  async getAllAreas(): Promise<AreaWithStats[]> {
     return await this.getAllAreasUseCase.execute();
   }
 

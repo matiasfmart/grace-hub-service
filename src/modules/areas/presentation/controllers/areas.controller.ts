@@ -43,7 +43,7 @@ export class AreasController {
   @HttpCode(HttpStatus.OK)
   async findAll(): Promise<AreaResponseDto[]> {
     const areas = await this.areaApplicationService.getAllAreas();
-    return AreaResponseDto.fromDomainArray(areas);
+    return AreaResponseDto.fromStatsArray(areas);
   }
 
   @Get(':id')
