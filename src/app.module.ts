@@ -11,6 +11,7 @@ import { MeetingsModule } from './modules/meetings/meetings.module';
 import { AttendanceModule } from './modules/attendance/attendance.module';
 import { TithesModule } from './modules/tithes/tithes.module';
 import { RolesModule } from './modules/roles/roles.module';
+import { ProspectsModule } from './modules/prospects/prospects.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { RolesModule } from './modules/roles/roles.module';
     TithesModule,
     RolesModule,
     AuthModule,
+    ProspectsModule,
   ],
   providers: [
     // Global authentication guard — all endpoints require JWT cookie unless @Public()

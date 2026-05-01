@@ -287,3 +287,31 @@ CREATE INDEX "idx_tithes_year_month" ON "tithes"("year", "month");
 -- Member Roles
 CREATE INDEX "idx_member_roles_member" ON "member_roles"("member_id");
 CREATE INDEX "idx_member_roles_role_type" ON "member_roles"("role_type_id");
+
+-- ============================================
+-- 14. PROSPECTS (Prospectos / Equipo de Bienvenida)
+-- ============================================
+CREATE TYPE "prospects_status_enum" AS ENUM ('pending', 'integrated', 'lost');
+CREATE TYPE "prospects_source_enum" AS ENUM ('pwa', 'manual');
+
+CREATE TABLE "prospects" (
+  "prospect_id"  serial          PRIMARY KEY,
+  "first_name"   varchar(100)    NOT NULL,
+  "last_name"    varchar(100)    NOT NULL,
+  "contact"      varchar(255),
+  "source"       "prospects_source_enum"  NOT NULL DEFAULT 'manual',
+  "added_by"     integer,
+  "visit_date"   date            NOT NULL,
+  "notes"        text,
+  "status"       "prospects_status_enum"  NOT NULL DEFAULT 'pending',
+  "member_id"    integer,
+  "created_at"   timestamptz     NOT NULL DEFAULT now(),
+  "updated_at"   timestamptz     NOT NULL DEFAULT now(),
+  CONSTRAINT "fk_prospect_member"
+    FOREIGN KEY ("member_id") REFERENCES "members"("member_id") ON DELETE SET NULL,
+  CONSTRAINT "fk_prospect_added_by"
+    FOREIGN KEY ("added_by") REFERENCES "members"("member_id") ON DELETE SET NULL
+);
+
+CREATE INDEX "idx_prospects_status" ON "prospects"("status");
+CREATE INDEX "idx_prospects_visit_date" ON "prospects"("visit_date");

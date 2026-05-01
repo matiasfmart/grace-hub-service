@@ -1,6 +1,6 @@
 # Grace Hub Service - Documentación
 
-> **Última actualización:** 2026-04-22
+> **Última actualización:** 2026-05-01
 
 ## Índice
 
@@ -14,7 +14,7 @@
 - [AUTH_ARCHITECTURE.md](./architecture/AUTH_ARCHITECTURE.md) - Arquitectura del módulo de autenticación
 
 ### Análisis
-- [BACKEND_FRONTEND_COMPARISON.md](./analysis/BACKEND_FRONTEND_COMPARISON.md) - Estado de endpoints vs frontend (98%)
+- [BACKEND_FRONTEND_COMPARISON.md](./analysis/BACKEND_FRONTEND_COMPARISON.md) - Estado de endpoints vs frontend (94%)
 
 ### Guías
 - [DEVELOPMENT_GUIDE.md](./guides/DEVELOPMENT_GUIDE.md) - Guía de desarrollo
@@ -24,7 +24,7 @@
 - [ADR-007: Estrategia de Build en Producción](../../docs-grace-hub/decisions/007-estrategia-build-produccion.md) - Por qué el Build Command de Render usa `--include=dev` y cómo migrar a Docker cuando corresponda
 
 ### Base de Datos
-- [current_schema.sql](./current_schema.sql) - Schema SQL actual
+- [init-schema.sql](../init-schema.sql) - Schema SQL de inicialización
 
 ### Prompts
 - [prompts.md](./prompts/prompts.md) - Prompts para desarrollo con IA
@@ -57,9 +57,12 @@ Para documentación funcional y de negocio, ver:
 | Tithes | `/tithes` | ⚠️ Parcial |
 | Role Types | `/role-types` | ✅ Completo |
 | Auth | `/auth` | ✅ Completo |
+| Prospects | `/prospects` | ✅ Completo |
 
 ### Módulos Pendientes
 
 | Módulo | Descripción | Prioridad |
 |--------|-------------|----------|
 | RoleTypes edit | `PUT /role-types/:id` - Editar etiqueta | Baja |
+| Tithes memberId | `GET /tithes?memberId=:id` - Ver diezmos de un miembro | Media |
+| Tithes delete | `DELETE /tithes/:id` - Eliminar registro | Media |

@@ -43,4 +43,15 @@ export class AuthService {
     if (!user) throw new UnauthorizedException();
     return { id: user.id, email: user.email };
   }
+
+  async teamLogin(teamCode: string): Promise<string> {
+    const expected = process.env.WELCOME_TEAM_CODE;
+    if (!expected || teamCode !== expected) {
+      throw new UnauthorizedException('Código incorrecto');
+    }
+    return this.jwtService.signAsync({
+      sub: 0,
+      scope: 'welcome_team',
+    });
+  }
 }

@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import { AuthService } from '../../application/services/auth.service';
 import { LoginDto } from '../dtos/login.dto';
 import { RegisterDto } from '../dtos/register.dto';
+import { TeamLoginDto } from '../dtos/team-login.dto';
 import { Public } from '../../decorators/public.decorator';
 import { JwtPayload } from '../../guards/auth.guard';
 
@@ -52,5 +53,18 @@ export class AuthController {
   async logout(@Res({ passthrough: true }) res: Response): Promise<{ message: string }> {
     res.clearCookie(COOKIE_NAME);
     return { message: 'Logout successful' };
+  }
+
+  /**
+   * POST /auth/team-login — Authenticate welcome team with shared team code.
+   * Returns JWT in response body (not a cookie) for use by the PWA.
+   * The JWT includes scope: 'welcome_team'. Identity is captured per-form in addedBy.
+   */
+  @Public()
+  @Post('team-login')
+  @HttpCode(HttpStatus.OK)
+  async teamLogin(@Body() dto: TeamLoginDto): Promise<{ token: string }> {
+    const token = await this.authService.teamLogin(dto.teamCode);
+    return { token };
   }
 }

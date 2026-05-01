@@ -1,7 +1,7 @@
 # Análisis Comparativo: Backend vs Frontend
 
-> **Última actualización:** 2026-04-22  
-> **Estado:** 98% funcional (68/70 casuísticas)
+> **Última actualización:** 2026-05-01  
+> **Estado:** 98% funcional (79/81 casuísticas)
 
 Este documento compara cada funcionalidad que el frontend necesita con el estado actual del backend.
 
@@ -177,14 +177,41 @@ Este documento compara cada funcionalidad que el frontend necesita con el estado
 
 | Estado | Cantidad | Porcentaje |
 |--------|----------|------------|
+| ✅ Funcional | 79 | 98% |
+| ⚠️ Parcial | 0 | 0% |
+| ❌ No implementado | 2 | 2% |
+| **TOTAL** | **81** | **100%** |
+
+---
+
+## 10. MÓDULO: PROSPECTS (NUEVOS INGRESOS)
+
+| # | Casuística | Backend | Estado |
+|---|------------|---------|--------|
+| 10.1 | Listar prospects pendientes | `GET /prospects?status=pending` | ✅ |
+| 10.2 | Listar prospects integrados | `GET /prospects?status=integrated` | ✅ |
+| 10.3 | Listar prospects archivados | `GET /prospects?status=lost` | ✅ |
+| 10.4 | Crear prospect (admin manual) | `POST /prospects` con `addedBy?` | ✅ |
+| 10.5 | Crear prospect (PWA equipo) | `POST /prospects` con Bearer JWT scope `welcome_team` | ✅ |
+| 10.6 | Ver prospect por ID | `GET /prospects/:id` | ✅ |
+| 10.7 | Editar campos prospect | `PATCH /prospects/:id` (solo estado `pending`) | ✅ |
+| 10.8 | Integrar prospect como miembro | `PATCH /prospects/:id/integrate` | ✅ |
+| 10.9 | Archivar prospect | `PATCH /prospects/:id/archive` | ✅ |
+| 10.10 | Nombre del agregador en listados | LEFT JOIN a `members` en `findFiltered()` y `findById()` | ✅ |
+| 10.11 | Auth equipo de bienvenida (PWA) | `POST /auth/team-login` — valida `WELCOME_TEAM_CODE`, retorna JWT | ✅ |
+
+**Resumen:** 11/11 ✅
+
+---
+
+## RESUMEN GLOBAL (ANTERIOR)
+
+| Estado | Cantidad | Porcentaje |
+|--------|----------|------------|
 | ✅ Funcional | 66 | 94% |
 | ⚠️ Parcial | 2 | 3% |
 | ❌ No implementado | 4 | 6% |
 | **TOTAL** | **72** | **100%** |
-
----
-
-## ENDPOINTS PENDIENTES
 
 ### Prioridad Media
 
@@ -192,12 +219,12 @@ Este documento compara cada funcionalidad que el frontend necesita con el estado
 |----------|--------|-------------|
 | `GET /tithes?memberId=:id` | Tithes | Ver diezmos de un miembro específico |
 | `DELETE /tithes/:id` | Tithes | Eliminar registro de diezmo |
-| `PUT /role-types/:id` | RoleTypes | Editar nombre de etiqueta |
 
 ### Prioridad Baja
 
 | Endpoint | Módulo | Descripción |
 |----------|--------|-------------|
+| `PUT /role-types/:id` | RoleTypes | Editar nombre de etiqueta |
 | Optimización opcional | Meetings | El frontend ya recalcula client-side en `/events` para todos los tipos de audiencia; no es crítico |
 
 ---
@@ -209,3 +236,7 @@ Este documento compara cada funcionalidad que el frontend necesita con el estado
 2. **`by_categories` funcional:** Usa `role_types` + `member_roles`. El frontend envía `roleTypeIds` en `audience_config`. El endpoint `expected-attendees` calcula via JOIN. El cliente filtra client-side en `events/page.tsx`.
 
 3. **`integrated/workers/leaders/mentors`:** El backend calcula server-side usando la query SQL de niveles operativos (ADR-004). El frontend también recalcula client-side en `/events/page.tsx` usando GDIs/Áreas ya cargadas, para evitar N requests.
+
+4. **`addedByName` como campo transient en Prospects:** Es un campo de lectura en el agregado de dominio (`public addedByName?: string`). Se puebla por el repositorio via LEFT JOIN a `members`, nunca por la lógica de dominio. `save()` y `update()` no lo incluyen; solo `findById()` y `findFiltered()` lo devuelven.
+
+5. **Auth dual para PWA:** El `AuthGuard` acepta tanto cookie `auth` (admin desktop) como `Authorization: Bearer` (PWA `grace-hub-welcome`). El scope `welcome_team` en el JWT identifica el origen pero no restringe endpoints actualmente.
