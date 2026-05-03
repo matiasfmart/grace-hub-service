@@ -30,6 +30,7 @@ src/
     ├── meetings/                     # ✅ CRUD completo implementado (meetings + series)
     ├── attendance/                   # ✅ CRUD completo implementado
     ├── roles/                        # ✅ CRUD completo implementado (role-types)
+    ├── prospects/                    # ✅ CRUD completo implementado (nuevos ingresos + team-login)
     └── auth/                         # ✅ Autenticación JWT implementada
 ```
 

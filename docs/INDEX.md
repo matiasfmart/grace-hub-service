@@ -14,14 +14,14 @@
 - [AUTH_ARCHITECTURE.md](./architecture/AUTH_ARCHITECTURE.md) - Arquitectura del módulo de autenticación
 
 ### Análisis
-- [BACKEND_FRONTEND_COMPARISON.md](./analysis/BACKEND_FRONTEND_COMPARISON.md) - Estado de endpoints vs frontend (94%)
+- [BACKEND_FRONTEND_COMPARISON.md](./analysis/BACKEND_FRONTEND_COMPARISON.md) - Estado de endpoints vs frontend (98%)
 
 ### Guías
 - [DEVELOPMENT_GUIDE.md](./guides/DEVELOPMENT_GUIDE.md) - Guía de desarrollo
 - [STORED_PROCEDURES_EXAMPLES.sql](./guides/STORED_PROCEDURES_EXAMPLES.sql) - Ejemplos de stored procedures
 
 ### Decisiones de Arquitectura (ADR)
-- [ADR-007: Estrategia de Build en Producción](../../docs-grace-hub/decisions/007-estrategia-build-produccion.md) - Por qué el Build Command de Render usa `--include=dev` y cómo migrar a Docker cuando corresponda
+- ADR-007: Estrategia de Build en Producción — Por qué el Build Command de Render usa `--include=dev` y cómo migrar a Docker cuando corresponda *(ver `/docs-grace-hub/decisions/007-estrategia-build-produccion.md`)*
 
 ### Base de Datos
 - [init-schema.sql](../init-schema.sql) - Schema SQL de inicialización
@@ -32,6 +32,8 @@
 ---
 
 ## Documentación Centralizada
+
+> **Nota:** El directorio `docs-grace-hub/` se encuentra en la raíz del proyecto (`/docs-grace-hub/`), fuera de los workspaces individuales de `grace-hub/` y `grace-hub-service/`. Si no aparece en el workspace activo, abrirlo desde el directorio raíz del proyecto.
 
 Para documentación funcional y de negocio, ver:
 

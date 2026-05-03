@@ -67,7 +67,8 @@ src/modules/auth/
     │   └── auth.controller.ts             # Endpoints HTTP del módulo
     └── dtos/
         ├── login.dto.ts                   # Validación email + password (min 8 chars)
-        └── register.dto.ts                # Idem
+        ├── register.dto.ts                # Idem
+        └── team-login.dto.ts              # Código de equipo para equipo de bienvenida
 ```
 
 ### Responsabilidad de cada pieza
@@ -75,8 +76,8 @@ src/modules/auth/
 | Archivo | Responsabilidad |
 |---|---|
 | `user.typeorm.entity.ts` | Define la tabla `users` (id, email, password_hash). TypeORM la crea automáticamente con `synchronize: true`. |
-| `auth.service.ts` | Hashea passwords (bcrypt 12 rounds), valida credenciales con comparación de tiempo constante, firma JWT, consulta usuario por ID. |
-| `auth.guard.ts` | Lee la cookie `auth` del request, verifica el JWT, escribe el payload en `req.user`. Si el handler tiene `@Public()`, el guard no actúa. |
+| `auth.service.ts` | Hashea passwords (bcrypt 12 rounds), valida credenciales con comparación de tiempo constante, firma JWT (scope `admin` o `welcome_team`), consulta usuario por ID. |
+| `auth.guard.ts` | Lee la cookie `auth` del request, verifica el JWT, escribe el payload en `req.user` (incluye `scope`). Si el handler tiene `@Public()`, el guard no actúa. |
 | `public.decorator.ts` | Decorador `@Public()` que setea metadata `isPublic: true` en el handler. El guard lo lee con `Reflector`. |
 | `auth.controller.ts` | Expone los endpoints HTTP. Delega toda la lógica a `AuthService`. Setea/limpia la cookie en el response. |
 | `auth.module.ts` | Registra `JwtModule` con configuración desde env vars. Exporta `AuthGuard` y `JwtModule` para que `AppModule` pueda registrar el guard global. |
@@ -178,9 +179,10 @@ export class HealthController {
 | Método | Ruta | Auth requerida | Descripción |
 |---|---|---|---|
 | `POST` | `/api/v1/auth/register` | No (`@Public`) | Crea un usuario nuevo. `{ email, password }` |
-| `POST` | `/api/v1/auth/login` | No (`@Public`) | Valida credenciales, setea cookie `auth`. `{ email, password }` |
+| `POST` | `/api/v1/auth/login` | No (`@Public`) | Valida credenciales, setea cookie `auth` con scope `admin`. `{ email, password }` |
 | `GET` | `/api/v1/auth/me` | Sí | Devuelve `{ id, email }` del usuario autenticado |
 | `POST` | `/api/v1/auth/logout` | Sí | Limpia la cookie `auth` |
+| `POST` | `/api/v1/auth/team-login` | No (`@Public`) | Autentica al equipo de bienvenida con código compartido. JWT incluye `scope: 'welcome_team'`. La identidad del voluntario se captura por formulario en `addedBy`. |
 
 ### Acceder al usuario autenticado en un controller
 
