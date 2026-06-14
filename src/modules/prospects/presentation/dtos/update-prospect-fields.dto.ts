@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsDateString } from 'class-validator';
+import { IsString, IsOptional, IsDateString, IsInt } from 'class-validator';
 
 export class UpdateProspectFieldsDto {
   @IsOptional()
@@ -20,4 +20,8 @@ export class UpdateProspectFieldsDto {
   @IsOptional()
   @IsDateString()
   visitDate?: string;
+
+  @IsOptional()
+  @IsInt()
+  meetingSeriesId?: number;
 }

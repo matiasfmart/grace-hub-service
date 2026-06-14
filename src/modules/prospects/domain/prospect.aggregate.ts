@@ -26,10 +26,11 @@ export class Prospect extends AggregateRoot {
     private _contact: string | undefined,
     private _source: ProspectSource,
     private _addedBy: number | undefined,
-    private _visitDate: Date,
+    private _visitAt: Date,
     private _notes: string | undefined,
     private _status: ProspectStatus,
     private _memberId: number | undefined,
+    private _meetingSeriesId: number | undefined,
     private readonly _createdAt: Date,
     private _updatedAt: Date,
   ) {
@@ -37,10 +38,11 @@ export class Prospect extends AggregateRoot {
   }
 
   /**
-   * Populated by the repository when doing a JOIN with members.
-   * Not domain state — purely a read-model display field.
+   * Populated by the repository when doing JOINs.
+   * Not domain state — purely read-model display fields.
    */
   public addedByName?: string;
+  public meetingSeriesName?: string;
 
   // ─── Getters ────────────────────────────────────────────────────────────────
   get id(): number | undefined { return this._id; }
@@ -50,8 +52,9 @@ export class Prospect extends AggregateRoot {
   get contact(): string | undefined { return this._contact; }
   get source(): ProspectSource { return this._source; }
   get addedBy(): number | undefined { return this._addedBy; }
-  get visitDate(): Date { return this._visitDate; }
+  get visitAt(): Date { return this._visitAt; }
   get notes(): string | undefined { return this._notes; }
+  get meetingSeriesId(): number | undefined { return this._meetingSeriesId; }
   get status(): ProspectStatus { return this._status; }
   get memberId(): number | undefined { return this._memberId; }
   get createdAt(): Date { return this._createdAt; }
@@ -61,11 +64,12 @@ export class Prospect extends AggregateRoot {
   public static create(
     firstName: string,
     lastName: string,
-    visitDate: Date,
+    visitAt: Date,
     contact?: string,
     source: ProspectSource = ProspectSource.MANUAL,
     addedBy?: number,
     notes?: string,
+    meetingSeriesId?: number,
   ): Prospect {
     if (!firstName || firstName.trim().length === 0) {
       throw new ValidationException('El nombre del prospecto no puede estar vacío');
@@ -73,7 +77,7 @@ export class Prospect extends AggregateRoot {
     if (!lastName || lastName.trim().length === 0) {
       throw new ValidationException('El apellido del prospecto no puede estar vacío');
     }
-    if (!visitDate) {
+    if (!visitAt) {
       throw new ValidationException('La fecha de visita es requerida');
     }
 
@@ -85,10 +89,11 @@ export class Prospect extends AggregateRoot {
       contact?.trim(),
       source,
       addedBy,
-      visitDate,
+      visitAt,
       notes?.trim(),
       ProspectStatus.PENDING,
       undefined,
+      meetingSeriesId,
       now,
       now,
     );
@@ -102,14 +107,15 @@ export class Prospect extends AggregateRoot {
     contact: string | undefined,
     source: ProspectSource,
     addedBy: number | undefined,
-    visitDate: Date,
+    visitAt: Date,
     notes: string | undefined,
     status: ProspectStatus,
     memberId: number | undefined,
+    meetingSeriesId: number | undefined,
     createdAt: Date,
     updatedAt: Date,
   ): Prospect {
-    return new Prospect(id, firstName, lastName, contact, source, addedBy, visitDate, notes, status, memberId, createdAt, updatedAt);
+    return new Prospect(id, firstName, lastName, contact, source, addedBy, visitAt, notes, status, memberId, meetingSeriesId, createdAt, updatedAt);
   }
 
   // ─── Business methods ─────────────────────────────────────────────────────────

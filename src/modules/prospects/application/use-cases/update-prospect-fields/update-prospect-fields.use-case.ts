@@ -9,7 +9,8 @@ export interface UpdateProspectFieldsInput {
   lastName?: string;
   contact?: string;
   notes?: string;
-  visitDate?: string; // YYYY-MM-DD
+  visitDate?: string; // ISO 8601 datetime string
+  meetingSeriesId?: number;
 }
 
 @Injectable()
@@ -34,7 +35,8 @@ export class UpdateProspectFieldsUseCase {
       lastName: input.lastName,
       contact: input.contact,
       notes: input.notes,
-      visitDate: input.visitDate ? new Date(input.visitDate) : undefined,
+      visitAt: input.visitDate ? new Date(input.visitDate) : undefined,
+      meetingSeriesId: input.meetingSeriesId,
     });
   }
 }

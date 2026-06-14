@@ -6,7 +6,6 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { ProspectStatus, ProspectSource } from '../../../domain/prospect.aggregate';
-import { DateTransformer } from '../../../../../core/infrastructure/transformers';
 
 @Entity('prospects')
 export class ProspectEntity {
@@ -34,8 +33,11 @@ export class ProspectEntity {
   @Column({ name: 'added_by', type: 'integer', nullable: true })
   addedBy?: number;
 
-  @Column({ name: 'visit_date', type: 'date', transformer: DateTransformer })
-  visitDate: Date;
+  @Column({ name: 'visit_at', type: 'timestamptz' })
+  visitAt: Date;
+
+  @Column({ name: 'meeting_series_id', type: 'integer', nullable: true })
+  meetingSeriesId?: number;
 
   @Column({ name: 'notes', type: 'text', nullable: true })
   notes?: string;

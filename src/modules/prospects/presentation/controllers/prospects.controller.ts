@@ -43,6 +43,7 @@ export class ProspectsController {
       dto.source ?? ProspectSource.MANUAL,
       dto.addedBy,
       dto.notes,
+      dto.meetingSeriesId,
     );
     const prospect = await this.prospectApplicationService.createProspect(command);
     return ProspectResponseDto.fromDomain(prospect);
@@ -111,7 +112,14 @@ export class ProspectsController {
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateProspectFieldsDto,
   ): Promise<ProspectResponseDto> {
-    const prospect = await this.prospectApplicationService.updateProspectFields(id, dto);
+    const prospect = await this.prospectApplicationService.updateProspectFields(id, {
+      firstName: dto.firstName,
+      lastName: dto.lastName,
+      contact: dto.contact,
+      notes: dto.notes,
+      visitDate: dto.visitDate,
+      meetingSeriesId: dto.meetingSeriesId,
+    });
     return ProspectResponseDto.fromDomain(prospect);
   }
 }

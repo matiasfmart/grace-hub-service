@@ -26,7 +26,7 @@ export class IntegrateProspectUseCase {
       throw new NotFoundException(`Prospecto con ID ${command.prospectId} no encontrado`);
     }
 
-    // Create the member (visitDate → joinDate, as defined in the proposal)
+    // Create the member (visitAt → joinDate, as defined in the proposal)
     const createCommand = new CreateMemberCommand(
       prospect.firstName,
       prospect.lastName,
@@ -34,7 +34,7 @@ export class IntegrateProspectUseCase {
       RecordStatus.VIGENTE,
       undefined,
       undefined,
-      prospect.visitDate,
+      prospect.visitAt,
       false,
     );
     const newMember = await this.memberApplicationService.createMember(createCommand);

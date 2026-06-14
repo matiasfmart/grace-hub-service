@@ -6,7 +6,8 @@ export interface ProspectEditableFields {
   lastName?: string;
   contact?: string;
   notes?: string;
-  visitDate?: Date;
+  visitAt?: Date;
+  meetingSeriesId?: number;
 }
 
 export interface IProspectRepository {

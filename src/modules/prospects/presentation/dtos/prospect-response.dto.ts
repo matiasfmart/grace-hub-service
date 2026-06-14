@@ -9,7 +9,9 @@ export class ProspectResponseDto {
   source: string;
   addedBy?: number;
   addedByName?: string;
-  visitDate: string;
+  visitDate: string; // ISO 8601 datetime — field name kept for API backward compatibility
+  meetingSeriesId?: number;
+  meetingSeriesName?: string;
   notes?: string;
   status: string;
   memberId?: number;
@@ -26,9 +28,12 @@ export class ProspectResponseDto {
     dto.source = prospect.source;
     dto.addedBy = prospect.addedBy;
     dto.addedByName = prospect.addedByName;
-    dto.visitDate = prospect.visitDate instanceof Date
-      ? prospect.visitDate.toISOString().split('T')[0]
-      : String(prospect.visitDate);
+    // Send full ISO datetime — no truncation. Clients use this to display hour.
+    dto.visitDate = prospect.visitAt instanceof Date
+      ? prospect.visitAt.toISOString()
+      : String(prospect.visitAt);
+    dto.meetingSeriesId = prospect.meetingSeriesId;
+    dto.meetingSeriesName = prospect.meetingSeriesName;
     dto.notes = prospect.notes;
     dto.status = prospect.status;
     dto.memberId = prospect.memberId;

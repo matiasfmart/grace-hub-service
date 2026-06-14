@@ -17,11 +17,12 @@ export class CreateProspectUseCase {
     const prospect = Prospect.create(
       command.firstName,
       command.lastName,
-      command.visitDate,
+      command.visitAt,
       command.contact,
       command.source,
       command.addedBy,
       command.notes,
+      command.meetingSeriesId,
     );
     return this.prospectRepository.save(prospect);
   }

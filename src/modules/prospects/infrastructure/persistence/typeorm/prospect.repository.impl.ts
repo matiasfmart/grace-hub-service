@@ -24,12 +24,14 @@ export class ProspectRepositoryImpl implements IProspectRepository {
       .createQueryBuilder('prospect')
       .leftJoin('members', 'm', 'm.member_id = prospect.added_by')
       .addSelect("CONCAT(m.first_name, ' ', m.last_name)", 'addedByName')
+      .leftJoin('meeting_series', 'ms', 'ms.series_id = prospect.meeting_series_id')
+      .addSelect('ms.name', 'meetingSeriesName')
       .where('prospect.prospect_id = :id', { id });
     const { entities, raw } = await qb.getRawAndEntities();
     if (entities.length === 0) return null;
     const prospect = this.toDomain(entities[0]);
-    const name: string | null = raw[0]['addedByName'] as string | null;
-    prospect.addedByName = name ?? undefined;
+    prospect.addedByName = (raw[0]['addedByName'] as string | null) ?? undefined;
+    prospect.meetingSeriesName = (raw[0]['meetingSeriesName'] as string | null) ?? undefined;
     return prospect;
   }
 
@@ -37,16 +39,18 @@ export class ProspectRepositoryImpl implements IProspectRepository {
     const qb = this.repository
       .createQueryBuilder('prospect')
       .leftJoin('members', 'm', 'm.member_id = prospect.added_by')
-      .addSelect("CONCAT(m.first_name, ' ', m.last_name)", 'addedByName');
+      .addSelect("CONCAT(m.first_name, ' ', m.last_name)", 'addedByName')
+      .leftJoin('meeting_series', 'ms', 'ms.series_id = prospect.meeting_series_id')
+      .addSelect('ms.name', 'meetingSeriesName');
     if (options.status !== undefined) {
       qb.where('prospect.status = :status', { status: options.status });
     }
-    qb.orderBy('prospect.visit_date', 'DESC').addOrderBy('prospect.created_at', 'DESC');
+    qb.orderBy('prospect.visit_at', 'DESC').addOrderBy('prospect.created_at', 'DESC');
     const { entities, raw } = await qb.getRawAndEntities();
     return entities.map((entity, i) => {
       const prospect = this.toDomain(entity);
-      const name: string | null = raw[i]['addedByName'] as string | null;
-      prospect.addedByName = name ?? undefined;
+      prospect.addedByName = (raw[i]['addedByName'] as string | null) ?? undefined;
+      prospect.meetingSeriesName = (raw[i]['meetingSeriesName'] as string | null) ?? undefined;
       return prospect;
     });
   }
@@ -70,7 +74,8 @@ export class ProspectRepositoryImpl implements IProspectRepository {
     if (fields.lastName !== undefined) updateData['lastName'] = fields.lastName;
     if (fields.contact !== undefined) updateData['contact'] = fields.contact;
     if (fields.notes !== undefined) updateData['notes'] = fields.notes;
-    if (fields.visitDate !== undefined) updateData['visitDate'] = fields.visitDate;
+    if (fields.visitAt !== undefined) updateData['visitAt'] = fields.visitAt;
+    if (fields.meetingSeriesId !== undefined) updateData['meetingSeriesId'] = fields.meetingSeriesId;
 
     await this.repository.update({ prospectId: id }, updateData);
     const updated = await this.findById(id);
@@ -87,7 +92,8 @@ export class ProspectRepositoryImpl implements IProspectRepository {
     entity.contact = prospect.contact;
     entity.source = prospect.source;
     entity.addedBy = prospect.addedBy;
-    entity.visitDate = prospect.visitDate;
+    entity.visitAt = prospect.visitAt;
+    entity.meetingSeriesId = prospect.meetingSeriesId;
     entity.notes = prospect.notes;
     entity.status = prospect.status;
     entity.memberId = prospect.memberId;
@@ -102,10 +108,11 @@ export class ProspectRepositoryImpl implements IProspectRepository {
       entity.contact,
       entity.source as ProspectSource,
       entity.addedBy,
-      entity.visitDate,
+      entity.visitAt,
       entity.notes,
       entity.status as ProspectStatus,
       entity.memberId,
+      entity.meetingSeriesId,
       entity.createdAt,
       entity.updatedAt,
     );

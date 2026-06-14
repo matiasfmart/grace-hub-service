@@ -9,7 +9,7 @@ export class CreateProspectDto {
   lastName: string;
 
   @IsDateString()
-  visitDate: string;
+  visitDate: string; // ISO 8601 — accepts both YYYY-MM-DD and full datetime
 
   @IsOptional()
   @IsString()
@@ -26,4 +26,8 @@ export class CreateProspectDto {
   @IsOptional()
   @IsInt()
   addedBy?: number;
+
+  @IsOptional()
+  @IsInt()
+  meetingSeriesId?: number;
 }
