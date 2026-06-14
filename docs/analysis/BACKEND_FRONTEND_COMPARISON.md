@@ -1,7 +1,7 @@
 # Análisis Comparativo: Backend vs Frontend
 
-> **Última actualización:** 2026-05-01  
-> **Estado:** 98% funcional (79/81 casuísticas)
+> **Última actualización:** 2026-06-14  
+> **Estado:** 97% funcional (90/93 casuísticas)
 
 Este documento compara cada funcionalidad que el frontend necesita con el estado actual del backend.
 
@@ -14,6 +14,7 @@ Este documento compara cada funcionalidad que el frontend necesita con el estado
 | ✅ | Completamente implementado y funcional |
 | ⚠️ | Parcialmente implementado o necesita ajustes |
 | ❌ | No implementado |
+| ⏳ | Propuesto — pendiente de implementación |
 
 ---
 
@@ -204,28 +205,43 @@ Este documento compara cada funcionalidad que el frontend necesita con el estado
 
 ---
 
-## RESUMEN GLOBAL (ANTERIOR)
+## 11. PROPUESTAS PENDIENTES (no implementadas)
+
+| # | Propuesta | Referencia | Estado |
+|---|-----------|------------|--------|
+| 11.1 | Migrar `visit_date DATE` → `visit_at TIMESTAMPTZ` en tabla `prospects` | [PROPOSAL-001](../../grace-hub/docs/proposals/PROPOSAL-001-visit-datetime-and-meeting-series.md) | ⏳ Pendiente |
+| 11.2 | Agregar FK opcional `meeting_series_id` a tabla `prospects` | [PROPOSAL-001](../../grace-hub/docs/proposals/PROPOSAL-001-visit-datetime-and-meeting-series.md) | ⏳ Pendiente |
+
+**Impacto de PROPOSAL-001 en el backend:**
+- 1 migración SQL (ALTER TABLE + nuevo índice)
+- 9 archivos afectados: entity, aggregate, commands (create/update), use-cases, repository interface/impl, DTO, mapper
+- Ver detalle completo en PROPOSAL-001
+
+---
+
+## RESUMEN GLOBAL
 
 | Estado | Cantidad | Porcentaje |
 |--------|----------|------------|
-| ✅ Funcional | 66 | 94% |
-| ⚠️ Parcial | 2 | 3% |
-| ❌ No implementado | 4 | 6% |
-| **TOTAL** | **72** | **100%** |
+| ✅ Funcional | 90 | 97% |
+| ⚠️ Parcial | 1 | 1% |
+| ❌ No implementado | 3 | 2% |
+| ⏳ Propuesto | 2 | — |
+| **TOTAL implementado/parcial** | **93** | **100%** |
 
-### Prioridad Media
+### ❌ Pendientes de implementación
 
-| Endpoint | Módulo | Descripción |
-|----------|--------|-------------|
-| `GET /tithes?memberId=:id` | Tithes | Ver diezmos de un miembro específico |
-| `DELETE /tithes/:id` | Tithes | Eliminar registro de diezmo |
+| Endpoint | Módulo | Prioridad |
+|----------|--------|-----------|
+| `GET /tithes?memberId=:id` | Tithes | Media |
+| `DELETE /tithes/:id` | Tithes | Media |
+| `PUT /role-types/:id` | RoleTypes | Baja |
 
-### Prioridad Baja
+### ⏳ Propuestas aprobadas, pendientes de desarrollo
 
-| Endpoint | Módulo | Descripción |
-|----------|--------|-------------|
-| `PUT /role-types/:id` | RoleTypes | Editar nombre de etiqueta |
-| Optimización opcional | Meetings | El frontend ya recalcula client-side en `/events` para todos los tipos de audiencia; no es crítico |
+| Feature | Referencia | Prioridad |
+|---------|------------|-----------|
+| `visit_at TIMESTAMPTZ` + `meeting_series_id` en Prospects | PROPOSAL-001 | Alta — problema operativo activo |
 
 ---
 
@@ -240,3 +256,5 @@ Este documento compara cada funcionalidad que el frontend necesita con el estado
 4. **`addedByName` como campo transient en Prospects:** Es un campo de lectura en el agregado de dominio (`public addedByName?: string`). Se puebla por el repositorio via LEFT JOIN a `members`, nunca por la lógica de dominio. `save()` y `update()` no lo incluyen; solo `findById()` y `findFiltered()` lo devuelven.
 
 5. **Auth dual para PWA:** El `AuthGuard` acepta tanto cookie `auth` (admin desktop) como `Authorization: Bearer` (PWA `grace-hub-welcome`). El scope `welcome_team` en el JWT identifica el origen pero no restringe endpoints actualmente.
+
+6. **Cache layer en frontend:** `cached-services.ts` usa Map module-level con TTL=5min en lugar de `unstable_cache`. La invalidación se hace via `invalidateCacheByTag()` llamado desde Server Actions. El `unstable_cache` fue descartado porque ejecuta fuera del contexto de request y no puede reenviar la cookie `auth` → 401 en backend.
