@@ -4,11 +4,12 @@ import { GetAllMeetingsUseCase } from '../use-cases/get-meeting/get-all-meetings
 import { GetMeetingByIdUseCase } from '../use-cases/get-meeting/get-meeting-by-id.use-case';
 import { UpdateMeetingUseCase } from '../use-cases/update-meeting/update-meeting.use-case';
 import { DeleteMeetingUseCase } from '../use-cases/delete-meeting/delete-meeting.use-case';
+import { GetMeetingsCountBySeriesUseCase } from '../use-cases/get-meeting/get-meetings-count-by-series.use-case';
 import { CreateMeetingCommand } from '../commands/create-meeting.command';
 import { UpdateMeetingCommand } from '../commands/update-meeting.command';
 import { DeleteMeetingCommand } from '../commands/delete-meeting.command';
 import { Meeting } from '../../domain/meeting.aggregate';
-import { MeetingFilters } from '../../domain/repositories/meeting.repository.interface';
+import { MeetingFilters, MeetingSeriesCount } from '../../domain/repositories/meeting.repository.interface';
 
 @Injectable()
 export class MeetingApplicationService {
@@ -18,6 +19,7 @@ export class MeetingApplicationService {
     private readonly getMeetingByIdUseCase: GetMeetingByIdUseCase,
     private readonly updateMeetingUseCase: UpdateMeetingUseCase,
     private readonly deleteMeetingUseCase: DeleteMeetingUseCase,
+    private readonly getMeetingsCountBySeriesUseCase: GetMeetingsCountBySeriesUseCase,
   ) {}
 
   async createMeeting(command: CreateMeetingCommand): Promise<Meeting> {
@@ -38,5 +40,9 @@ export class MeetingApplicationService {
 
   async deleteMeeting(command: DeleteMeetingCommand): Promise<void> {
     return await this.deleteMeetingUseCase.execute(command);
+  }
+
+  async getMeetingsCountBySeries(): Promise<MeetingSeriesCount[]> {
+    return await this.getMeetingsCountBySeriesUseCase.execute();
   }
 }

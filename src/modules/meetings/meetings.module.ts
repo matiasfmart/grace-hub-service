@@ -16,6 +16,7 @@ import { DeleteMeetingSeriesUseCase } from './application/use-cases/delete-meeti
 import { CancelSeriesDateUseCase } from './application/use-cases/cancel-series-date/cancel-series-date.use-case';
 import { RestoreSeriesDateUseCase } from './application/use-cases/restore-series-date/restore-series-date.use-case';
 import { GetExpectedAttendeesUseCase } from './application/use-cases/get-expected-attendees/get-expected-attendees.use-case';
+import { GetMeetingsCountBySeriesUseCase } from './application/use-cases/get-meeting/get-meetings-count-by-series.use-case';
 import { MeetingEntity } from './infrastructure/persistence/typeorm/meeting.typeorm.entity';
 import { MeetingSeriesEntity } from './infrastructure/persistence/typeorm/meeting-series.typeorm.entity';
 import { MeetingAttendeeEntity } from './infrastructure/persistence/typeorm/meeting-attendee.typeorm.entity';
@@ -52,6 +53,7 @@ import { EXPECTED_ATTENDEES_QUERY_SERVICE } from './domain/services/expected-att
     CancelSeriesDateUseCase,
     RestoreSeriesDateUseCase,
     GetExpectedAttendeesUseCase,
+    GetMeetingsCountBySeriesUseCase,
     {
       provide: MEETING_REPOSITORY,
       useClass: MeetingRepositoryImpl,

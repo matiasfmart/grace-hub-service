@@ -4,8 +4,10 @@ import { GetAllAttendancesUseCase } from '../use-cases/get-attendance/get-all-at
 import { GetAttendanceByMeetingUseCase } from '../use-cases/get-attendance/get-attendance-by-meeting.use-case';
 import { GetAttendanceByMemberUseCase } from '../use-cases/get-attendance/get-attendance-by-member.use-case';
 import { SaveAttendanceForMeetingUseCase, AttendanceBatchItem } from '../use-cases/save-attendance-for-meeting/save-attendance-for-meeting.use-case';
+import { GetAttendanceStatsUseCase } from '../use-cases/get-attendance/get-attendance-stats.use-case';
 import { CreateAttendanceCommand } from '../commands/create-attendance.command';
 import { Attendance } from '../../domain/attendance.aggregate';
+import { AttendanceMeetingStats } from '../../domain/repositories/attendance.repository.interface';
 
 @Injectable()
 export class AttendanceApplicationService {
@@ -15,6 +17,7 @@ export class AttendanceApplicationService {
     private readonly getAttendanceByMeetingUseCase: GetAttendanceByMeetingUseCase,
     private readonly getAttendanceByMemberUseCase: GetAttendanceByMemberUseCase,
     private readonly saveAttendanceForMeetingUseCase: SaveAttendanceForMeetingUseCase,
+    private readonly getAttendanceStatsUseCase: GetAttendanceStatsUseCase,
   ) {}
 
   async createAttendance(command: CreateAttendanceCommand): Promise<Attendance> {
@@ -35,5 +38,9 @@ export class AttendanceApplicationService {
 
   async saveAttendanceForMeeting(meetingId: number, items: AttendanceBatchItem[]): Promise<Attendance[]> {
     return await this.saveAttendanceForMeetingUseCase.execute(meetingId, items);
+  }
+
+  async getAttendanceStats(meetingIds: number[]): Promise<AttendanceMeetingStats[]> {
+    return await this.getAttendanceStatsUseCase.execute(meetingIds);
   }
 }

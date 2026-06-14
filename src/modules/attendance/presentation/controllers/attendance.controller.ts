@@ -13,6 +13,7 @@ import { AttendanceApplicationService } from '../../application/services/attenda
 import { CreateAttendanceDto } from '../dtos/create-attendance.dto';
 import { SaveAttendanceForMeetingDto } from '../dtos/save-attendance-for-meeting.dto';
 import { AttendanceResponseDto } from '../dtos/attendance-response.dto';
+import { AttendanceStatsResponseDto } from '../dtos/attendance-stats-response.dto';
 import { CreateAttendanceCommand } from '../../application/commands/create-attendance.command';
 
 @Controller('attendance')
@@ -31,6 +32,18 @@ export class AttendanceController {
     );
     const attendance = await this.attendanceApplicationService.createAttendance(command);
     return AttendanceResponseDto.fromDomain(attendance);
+  }
+
+  @Get('stats')
+  @HttpCode(HttpStatus.OK)
+  async getStats(
+    @Query('meetingIds') meetingIdsParam?: string,
+  ): Promise<AttendanceStatsResponseDto[]> {
+    const meetingIds = meetingIdsParam
+      ? meetingIdsParam.split(',').map(Number).filter((n) => !isNaN(n))
+      : [];
+    const stats = await this.attendanceApplicationService.getAttendanceStats(meetingIds);
+    return AttendanceStatsResponseDto.fromReadModelArray(stats);
   }
 
   @Get()

@@ -7,6 +7,7 @@ import { GetAllAttendancesUseCase } from './application/use-cases/get-attendance
 import { GetAttendanceByMeetingUseCase } from './application/use-cases/get-attendance/get-attendance-by-meeting.use-case';
 import { GetAttendanceByMemberUseCase } from './application/use-cases/get-attendance/get-attendance-by-member.use-case';
 import { SaveAttendanceForMeetingUseCase } from './application/use-cases/save-attendance-for-meeting/save-attendance-for-meeting.use-case';
+import { GetAttendanceStatsUseCase } from './application/use-cases/get-attendance/get-attendance-stats.use-case';
 import { AttendanceEntity } from './infrastructure/persistence/typeorm/attendance.typeorm.entity';
 import { AttendanceRepositoryImpl } from './infrastructure/persistence/typeorm/attendance.repository.impl';
 import { ATTENDANCE_REPOSITORY } from './domain/repositories/attendance.repository.interface';
@@ -21,6 +22,7 @@ import { ATTENDANCE_REPOSITORY } from './domain/repositories/attendance.reposito
     GetAttendanceByMeetingUseCase,
     GetAttendanceByMemberUseCase,
     SaveAttendanceForMeetingUseCase,
+    GetAttendanceStatsUseCase,
     {
       provide: ATTENDANCE_REPOSITORY,
       useClass: AttendanceRepositoryImpl,

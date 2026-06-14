@@ -12,6 +12,8 @@ import { GetMemberByIdUseCase } from './application/use-cases/get-member/get-mem
 import { GetMembersFilteredUseCase } from './application/use-cases/get-members-filtered/get-members-filtered.use-case';
 import { UpdateMemberUseCase } from './application/use-cases/update-member/update-member.use-case';
 import { DeleteMemberUseCase } from './application/use-cases/delete-member/delete-member.use-case';
+import { GetMemberCountUseCase } from './application/use-cases/get-member/get-member-count.use-case';
+import { GetMemberRoleSummaryUseCase } from './application/use-cases/get-member/get-member-role-summary.use-case';
 
 // Infrastructure Layer
 import { MemberEntity } from './infrastructure/persistence/typeorm/member.typeorm.entity';
@@ -55,6 +57,8 @@ import { RemoveRoleTypeFromMemberUseCase } from '../roles/application/use-cases/
     DeleteMemberUseCase,
     AssignRoleTypeToMemberUseCase,
     RemoveRoleTypeFromMemberUseCase,
+    GetMemberCountUseCase,
+    GetMemberRoleSummaryUseCase,
 
     // Repository Implementation (bound to domain interface)
     {

@@ -4,6 +4,25 @@ import { MemberWithAssignmentsReadModel } from '../read-models/member-with-assig
 import { MemberFilterOptions, PaginatedMembersResult } from '../read-models/member-query.types';
 
 /**
+ * Aggregated count of active members.
+ * Used by GET /members/count — avoids fetching all rows.
+ */
+export interface MemberCount {
+  total: number;
+}
+
+/**
+ * Aggregated role summary for dashboard charts.
+ * Used by GET /members/role-summary — avoids fetching all rows.
+ */
+export interface MemberRoleSummary {
+  gdiGuides: number;
+  gdiMentors: number;
+  areaLeaders: number;
+  areaMentors: number;
+}
+
+/**
  * Repository interface defined in the Domain layer
  * Infrastructure layer will implement this (Dependency Inversion Principle)
  */
@@ -36,6 +55,10 @@ export interface IMemberRepository {
   findAllWithAssignmentsFiltered(
     options: MemberFilterOptions
   ): Promise<PaginatedMembersResult<MemberWithAssignmentsReadModel>>;
+
+  // Aggregation operations (for performance — avoid full-table fetches)
+  countActive(): Promise<MemberCount>;
+  getRoleSummary(): Promise<MemberRoleSummary>;
 }
 
 // Token for dependency injection

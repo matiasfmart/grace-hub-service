@@ -17,6 +17,7 @@ import { UpdateMemberDto } from '../dtos/update-member.dto';
 import { GetMembersFilteredDto } from '../dtos/get-members-filtered.dto';
 import { MemberResponseDto } from '../dtos/member-response.dto';
 import { PaginatedMembersResponseDto } from '../dtos/paginated-members-response.dto';
+import { MemberCountResponseDto, MemberRoleSummaryResponseDto } from '../dtos/member-stats-response.dto';
 import { CreateMemberCommand } from '../../application/commands/create-member.command';
 import { UpdateMemberCommand } from '../../application/commands/update-member.command';
 import { DeleteMemberCommand } from '../../application/commands/delete-member.command';
@@ -79,6 +80,20 @@ export class MembersController {
 
     const result = await this.memberApplicationService.getMembersFiltered(options);
     return PaginatedMembersResponseDto.fromResult(result);
+  }
+
+  @Get('count')
+  @HttpCode(HttpStatus.OK)
+  async count(): Promise<MemberCountResponseDto> {
+    const data = await this.memberApplicationService.getMemberCount();
+    return MemberCountResponseDto.fromReadModel(data);
+  }
+
+  @Get('role-summary')
+  @HttpCode(HttpStatus.OK)
+  async roleSummary(): Promise<MemberRoleSummaryResponseDto> {
+    const data = await this.memberApplicationService.getMemberRoleSummary();
+    return MemberRoleSummaryResponseDto.fromReadModel(data);
   }
 
   @Get(':id')

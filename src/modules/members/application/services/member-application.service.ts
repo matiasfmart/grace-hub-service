@@ -6,12 +6,15 @@ import { GetMembersFilteredUseCase } from '../use-cases/get-members-filtered/get
 import { GetMembersFilteredOptions } from '../use-cases/get-members-filtered/get-members-filtered.options';
 import { UpdateMemberUseCase } from '../use-cases/update-member/update-member.use-case';
 import { DeleteMemberUseCase } from '../use-cases/delete-member/delete-member.use-case';
+import { GetMemberCountUseCase } from '../use-cases/get-member/get-member-count.use-case';
+import { GetMemberRoleSummaryUseCase } from '../use-cases/get-member/get-member-role-summary.use-case';
 import { CreateMemberCommand } from '../commands/create-member.command';
 import { UpdateMemberCommand } from '../commands/update-member.command';
 import { DeleteMemberCommand } from '../commands/delete-member.command';
 import { Member } from '../../domain/member.aggregate';
 import { MemberWithAssignmentsReadModel } from '../../domain/read-models/member-with-assignments.read-model';
 import { PaginatedMembersResult } from '../../domain/read-models/member-query.types';
+import { MemberCount, MemberRoleSummary } from '../../domain/repositories/member.repository.interface';
 import { AssignRoleTypeToMemberUseCase } from '../../../roles/application/use-cases/assign-role-type-to-member/assign-role-type-to-member.use-case';
 import { RemoveRoleTypeFromMemberUseCase } from '../../../roles/application/use-cases/remove-role-type-from-member/remove-role-type-from-member.use-case';
 import { AssignRoleTypeToMemberCommand } from '../../../roles/application/use-cases/assign-role-type-to-member/assign-role-type-to-member.command';
@@ -40,6 +43,8 @@ export class MemberApplicationService {
     private readonly deleteMemberUseCase: DeleteMemberUseCase,
     private readonly assignRoleTypeToMemberUseCase: AssignRoleTypeToMemberUseCase,
     private readonly removeRoleTypeFromMemberUseCase: RemoveRoleTypeFromMemberUseCase,
+    private readonly getMemberCountUseCase: GetMemberCountUseCase,
+    private readonly getMemberRoleSummaryUseCase: GetMemberRoleSummaryUseCase,
   ) {}
 
   // Command operations (return Aggregate)
@@ -77,5 +82,14 @@ export class MemberApplicationService {
 
   async removeRoleType(command: RemoveRoleTypeFromMemberCommand): Promise<void> {
     return await this.removeRoleTypeFromMemberUseCase.execute(command);
+  }
+
+  // Aggregation operations (for performance)
+  async getMemberCount(): Promise<MemberCount> {
+    return await this.getMemberCountUseCase.execute();
+  }
+
+  async getMemberRoleSummary(): Promise<MemberRoleSummary> {
+    return await this.getMemberRoleSummaryUseCase.execute();
   }
 }

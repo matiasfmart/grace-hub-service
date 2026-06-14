@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource } from 'typeorm';
 import { AttendanceEntity } from './attendance.typeorm.entity';
-import { IAttendanceRepository } from '../../../domain/repositories/attendance.repository.interface';
+import { IAttendanceRepository, AttendanceMeetingStats } from '../../../domain/repositories/attendance.repository.interface';
 import { Attendance } from '../../../domain/attendance.aggregate';
 import { BaseRepository } from '../../../../../core/database/postgresql/base.repository';
 import { AttendanceMapper } from './mappers/attendance.mapper';
@@ -78,5 +78,31 @@ export class AttendanceRepositoryImpl
       where: { attendanceId: id },
     });
     return count > 0;
+  }
+
+  async findStatsByMeetings(meetingIds: number[]): Promise<AttendanceMeetingStats[]> {
+    if (meetingIds.length === 0) return [];
+    const rows: Array<{
+      meeting_id: string;
+      present_count: string;
+      absent_count: string;
+      total_expected: string;
+    }> = await this.attendanceRepository.query(
+      `SELECT
+         meeting_id,
+         COUNT(*) FILTER (WHERE was_present = true)  AS present_count,
+         COUNT(*) FILTER (WHERE was_present = false) AS absent_count,
+         COUNT(*)                                    AS total_expected
+       FROM attendance
+       WHERE meeting_id = ANY($1::int[])
+       GROUP BY meeting_id`,
+      [meetingIds],
+    );
+    return rows.map((r) => ({
+      meetingId: Number(r.meeting_id),
+      presentCount: Number(r.present_count),
+      absentCount: Number(r.absent_count),
+      totalExpected: Number(r.total_expected),
+    }));
   }
 }

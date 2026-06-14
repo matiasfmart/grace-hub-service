@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource, Between, MoreThanOrEqual, LessThanOrEqual } from 'typeorm';
 import { MeetingEntity } from './meeting.typeorm.entity';
-import { IMeetingRepository, MeetingFilters } from '../../../domain/repositories/meeting.repository.interface';
+import { IMeetingRepository, MeetingFilters, MeetingSeriesCount } from '../../../domain/repositories/meeting.repository.interface';
 import { Meeting } from '../../../domain/meeting.aggregate';
 import { BaseRepository } from '../../../../../core/database/postgresql/base.repository';
 import { MeetingMapper } from './mappers/meeting.mapper';
@@ -72,5 +72,19 @@ export class MeetingRepositoryImpl
       where: { meetingId: id },
     });
     return count > 0;
+  }
+
+  async countBySeries(): Promise<MeetingSeriesCount[]> {
+    const rows: Array<{ series_id: string; count: string }> =
+      await this.meetingRepository.query(
+        `SELECT series_id, COUNT(*) AS count
+         FROM meetings
+         WHERE series_id IS NOT NULL
+         GROUP BY series_id`,
+      );
+    return rows.map((r) => ({
+      seriesId: Number(r.series_id),
+      count: Number(r.count),
+    }));
   }
 }

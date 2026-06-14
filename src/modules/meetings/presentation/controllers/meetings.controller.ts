@@ -16,6 +16,7 @@ import { GetExpectedAttendeesUseCase } from '../../application/use-cases/get-exp
 import { CreateMeetingDto } from '../dtos/create-meeting.dto';
 import { UpdateMeetingDto } from '../dtos/update-meeting.dto';
 import { MeetingResponseDto } from '../dtos/meeting-response.dto';
+import { MeetingsCountBySeriesResponseDto } from '../dtos/meetings-count-by-series-response.dto';
 import { ExpectedAttendeeResponseDto } from '../dtos/expected-attendee-response.dto';
 import { CreateMeetingCommand } from '../../application/commands/create-meeting.command';
 import { UpdateMeetingCommand } from '../../application/commands/update-meeting.command';
@@ -56,6 +57,13 @@ export class MeetingsController {
     };
     const meetings = await this.meetingApplicationService.getAllMeetings(filters);
     return MeetingResponseDto.fromDomainArray(meetings);
+  }
+
+  @Get('count-by-series')
+  @HttpCode(HttpStatus.OK)
+  async countBySeries(): Promise<MeetingsCountBySeriesResponseDto[]> {
+    const counts = await this.meetingApplicationService.getMeetingsCountBySeries();
+    return MeetingsCountBySeriesResponseDto.fromReadModelArray(counts);
   }
 
   @Get(':id')

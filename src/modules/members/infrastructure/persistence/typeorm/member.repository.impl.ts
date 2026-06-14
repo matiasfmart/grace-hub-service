@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource } from 'typeorm';
 import { MemberEntity } from './member.typeorm.entity';
-import { IMemberRepository } from '../../../domain/repositories/member.repository.interface';
+import { IMemberRepository, MemberCount, MemberRoleSummary } from '../../../domain/repositories/member.repository.interface';
 import { Member } from '../../../domain/member.aggregate';
 import {
   MemberWithAssignmentsReadModel,
@@ -544,5 +544,34 @@ export class MemberRepositoryImpl
     const result = await this.executeStoredProcedure<any[]>('sp_get_all_members');
     const entities: MemberEntity[] = result.map(raw => Object.assign(new MemberEntity(), raw));
     return MemberMapper.toDomainArray(entities);
+  }
+
+  async countActive(): Promise<MemberCount> {
+    const rows: Array<{ total: string }> = await this.memberRepository.query(
+      `SELECT COUNT(*) AS total FROM members WHERE record_status = 'vigente'`,
+    );
+    return { total: Number(rows[0]?.total ?? 0) };
+  }
+
+  async getRoleSummary(): Promise<MemberRoleSummary> {
+    const rows: Array<{
+      gdi_guides: string;
+      gdi_mentors: string;
+      area_leaders: string;
+      area_mentors: string;
+    }> = await this.memberRepository.query(
+      `SELECT
+         (SELECT COUNT(*) FROM gdis WHERE guide_id IS NOT NULL)  AS gdi_guides,
+         (SELECT COUNT(*) FROM gdis WHERE mentor_id IS NOT NULL) AS gdi_mentors,
+         (SELECT COUNT(*) FROM areas WHERE leader_id IS NOT NULL) AS area_leaders,
+         (SELECT COUNT(*) FROM areas WHERE mentor_id IS NOT NULL) AS area_mentors`,
+    );
+    const row = rows[0];
+    return {
+      gdiGuides: Number(row?.gdi_guides ?? 0),
+      gdiMentors: Number(row?.gdi_mentors ?? 0),
+      areaLeaders: Number(row?.area_leaders ?? 0),
+      areaMentors: Number(row?.area_mentors ?? 0),
+    };
   }
 }
