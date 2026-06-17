@@ -303,6 +303,8 @@ export class MemberRepositoryImpl
     }
 
     // GDI filter
+    // Business rule alignment (RN-001): a member belongs to a GDI if they are
+    // member, guide, or mentor of any GDI. Do not treat Areas as GDI membership.
     if (options.gdiFilters && options.gdiFilters.length > 0) {
       const hasNoGdiFilter = options.gdiFilters.includes('no-gdi-assigned');
       const specificGdis = options.gdiFilters
@@ -310,20 +312,29 @@ export class MemberRepositoryImpl
         .map(g => parseInt(g, 10))
         .filter(g => !isNaN(g));
 
+      const noGdiCondition = `(
+        NOT EXISTS(SELECT 1 FROM gdi_memberships gm WHERE gm.member_id = m.member_id)
+        AND NOT EXISTS(SELECT 1 FROM gdis g WHERE g.guide_id = m.member_id)
+        AND NOT EXISTS(SELECT 1 FROM gdis g WHERE g.mentor_id = m.member_id)
+      )`;
+
+      const specificGdiCondition = `(
+        EXISTS(SELECT 1 FROM gdi_memberships gm WHERE gm.member_id = m.member_id AND gm.gdi_id = ANY($${paramIndex}::int[]))
+        OR EXISTS(SELECT 1 FROM gdis g WHERE g.gdi_id = ANY($${paramIndex}::int[]) AND g.guide_id = m.member_id)
+        OR EXISTS(SELECT 1 FROM gdis g WHERE g.gdi_id = ANY($${paramIndex}::int[]) AND g.mentor_id = m.member_id)
+      )`;
+
       if (hasNoGdiFilter && specificGdis.length > 0) {
-        // Either no GDI OR specific GDIs
-        conditions.push(`(
-          NOT EXISTS(SELECT 1 FROM gdi_memberships gm WHERE gm.member_id = m.member_id)
-          OR EXISTS(SELECT 1 FROM gdi_memberships gm WHERE gm.member_id = m.member_id AND gm.gdi_id = ANY($${paramIndex}::int[]))
-        )`);
+        // Either no GDI OR explicit GDI match (member/guide/mentor)
+        conditions.push(`(${noGdiCondition} OR ${specificGdiCondition})`);
         params.push(specificGdis);
         paramIndex++;
       } else if (hasNoGdiFilter) {
         // Only no GDI
-        conditions.push(`NOT EXISTS(SELECT 1 FROM gdi_memberships gm WHERE gm.member_id = m.member_id)`);
+        conditions.push(noGdiCondition);
       } else if (specificGdis.length > 0) {
-        // Only specific GDIs
-        conditions.push(`EXISTS(SELECT 1 FROM gdi_memberships gm WHERE gm.member_id = m.member_id AND gm.gdi_id = ANY($${paramIndex}::int[]))`);
+        // Only specific GDIs (member/guide/mentor)
+        conditions.push(specificGdiCondition);
         params.push(specificGdis);
         paramIndex++;
       }
